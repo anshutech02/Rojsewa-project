@@ -1,0 +1,66 @@
+[
+  {
+    "_id": "vghat7vduw",
+    "createdAt": "2026-05-28T08:40:32.960Z",
+    "name": "Electrician",
+    "description": "Home electrical repairs, installations, and wiring",
+    "icon": "⚡",
+    "sortOrder": 1
+  },
+  {
+    "_id": "u6ftbf7aeh",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Plumber",
+    "description": "Leak fixes, pipe installations, and water system repairs",
+    "icon": "🚰",
+    "sortOrder": 2
+  },
+  {
+    "_id": "pigwi030pv",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Carpenter",
+    "description": "Furniture assembly, repair, and woodworking",
+    "icon": "🪚",
+    "sortOrder": 3
+  },
+  {
+    "_id": "o6h2ybtg1th",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Painter",
+    "description": "Interior and exterior house painting services",
+    "icon": "🎨",
+    "sortOrder": 4
+  },
+  {
+    "_id": "53xfhzirfs9",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Cleaner",
+    "description": "Deep home cleaning, sanitation, and dusting services",
+    "icon": "🧹",
+    "sortOrder": 5
+  },
+  {
+    "_id": "4avxikxwu5f",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "AC Repair",
+    "description": "Air conditioner servicing, repair, and installation",
+    "icon": "❄️",
+    "sortOrder": 6
+  },
+  {
+    "_id": "dzu250zvrfg",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Water Supply",
+    "description": "Emergency water tanker and bottle supply delivery",
+    "icon": "💧",
+    "sortOrder": 7
+  },
+  {
+    "_id": "vni3yrskusr",
+    "createdAt": "2026-05-28T08:40:32.961Z",
+    "name": "Vehicle Mechanic",
+    "description": "Car and bike repairs, maintenance, and washes",
+    "icon": "🚗",
+    "sortOrder": 8
+  }
+]
