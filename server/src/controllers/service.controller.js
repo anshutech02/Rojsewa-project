@@ -29,10 +29,14 @@ export const getServices = async (req, res, next) => {
     }
 
     // Find services
+    console.log('Querying services with:', query);
     let services = await Service.find(query)
       .populate({
         path: 'provider',
-        populate: { path: 'user', select: 'name email phone avatar address' }
+        populate: { 
+          path: 'user', 
+          select: 'name email phone avatar address' 
+        }
       })
       .populate('category');
 
@@ -52,7 +56,7 @@ export const getServices = async (req, res, next) => {
         return true;
       });
     }
-
+    console.log("Filtered Services:", services);
     res.status(200).json({ success: true, count: services.length, services });
   } catch (error) {
     next(error);

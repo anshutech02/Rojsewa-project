@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { services, categories, loading } = useSelector((state) => state.services);
+  const { serviceList, categories, loading } = useSelector((state) => state.services);
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -24,11 +24,12 @@ const HomePage = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(fetchServices({
+    const queryParams = {
       search: searchTerm,
       category: selectedCategory,
       city: cityFilter,
-    }));
+    }
+    dispatch(fetchServices(queryParams));
   };
 
   const selectCategory = (categoryId) => {
@@ -118,7 +119,7 @@ const HomePage = () => {
               <div key={n} className="glass rounded-2xl h-64 shimmer" />
             ))}
           </div>
-        ) : services.length === 0 ? (
+        ) : serviceList.length === 0 ? (
           <div className="glass rounded-2xl p-12 text-center text-zinc-500 flex flex-col gap-2 items-center">
             <span className="text-4xl">🔍</span>
             <h3 className="font-bold text-zinc-300">No Services Found</h3>
@@ -126,7 +127,7 @@ const HomePage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {services.map((service) => (
+            {serviceList.map((service) => (
               <Card key={service._id} className="flex flex-col h-full justify-between gap-4">
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-start gap-2">

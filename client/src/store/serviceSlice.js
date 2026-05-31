@@ -9,7 +9,7 @@ export const fetchServices = createAsyncThunk(
       const params = new URLSearchParams();
       if (search) params.append('search', search);
       if (category) params.append('category', category);
-      if (minPrice) params.append('minPrice', minPrice);
+      if (minPrice) params.append('minPrice', minPrice); 
       if (maxPrice) params.append('maxPrice', maxPrice);
       if (rating) params.append('rating', rating);
       if (isEmergency) params.append('isEmergency', isEmergency);
@@ -60,7 +60,7 @@ export const createService = createAsyncThunk(
 );
 
 const initialState = {
-  services: [],
+  serviceList: [],
   categories: [],
   currentService: null,
   loading: false,
@@ -84,7 +84,7 @@ const serviceSlice = createSlice({
       })
       .addCase(fetchServices.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = action.payload;
+        state.serviceList = action.payload;
       })
       .addCase(fetchServices.rejected, (state, action) => {
         state.loading = false;
@@ -109,7 +109,7 @@ const serviceSlice = createSlice({
       })
       // Create Service
       .addCase(createService.fulfilled, (state, action) => {
-        state.services.push(action.payload);
+        state.serviceList.push(action.payload);
       });
   },
 });
