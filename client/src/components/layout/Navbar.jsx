@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import NotificationTray from '../shared/NotificationTray.jsx';
 
 const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -70,9 +71,11 @@ const Navbar = () => {
               <Link to="/bookings">
                 <Button variant="ghost" size="sm" className="gap-2">
                   <ClipboardList size={14} />
-                  My Bookings
+                  {user?.role === 'admin' ? 'All Bookings' : 'My Bookings'}
                 </Button>
               </Link>
+
+              <NotificationTray />
 
               <Link to="/profile">
                 <Button variant="ghost" size="sm" className="gap-2">
@@ -162,7 +165,7 @@ const Navbar = () => {
                     className="w-full justify-start gap-2"
                   >
                     <ClipboardList size={16} />
-                    My Bookings
+                    {user?.role === 'admin' ? 'All Bookings' : 'My Bookings'}
                   </Button>
                 </Link>
 
@@ -190,6 +193,7 @@ const Navbar = () => {
               </>
             ) : (
               <>
+              //navigate to login and register page on click and close the menu
                 <Link
                   to="/login"
                   onClick={() => setIsOpen(false)}

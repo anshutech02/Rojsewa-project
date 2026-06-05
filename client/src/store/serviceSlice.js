@@ -59,8 +59,45 @@ export const createService = createAsyncThunk(
   }
 );
 
+export const fetchProviderServices = createAsyncThunk(
+  'services/fetchProviderServices',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get('/services/provider/me');
+      return data.services;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Failed to fetch provider services');
+    }
+  }
+);
+
+export const updateService = createAsyncThunk(
+  'services/updateService',
+  async ({ serviceId, serviceData }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/services/${serviceId}`, serviceData);
+      return data.service;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Failed to update service');
+    }
+  }
+);
+
+export const deleteService = createAsyncThunk(
+  'services/deleteService',
+  async (serviceId, { rejectWithValue }) => {
+    try {
+      await api.delete(`/services/${serviceId}`);
+      return serviceId;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Failed to delete service');
+    }
+  }
+);
+
 const initialState = {
   serviceList: [],
+  providerServices: [],
   categories: [],
   currentService: null,
   loading: false,
@@ -107,9 +144,42 @@ const serviceSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // Fetch Provider Services
+      .addCase(fetchProviderServices.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProviderServices.fulfilled, (state, action) => {
+        state.loading = false;
+        state.providerServices = action.payload;
+      })
+      .addCase(fetchProviderServices.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Create Service
       .addCase(createService.fulfilled, (state, action) => {
+        state.providerServices.push(action.payload);
         state.serviceList.push(action.payload);
+      })
+      // Update Service
+      .addCase(updateService.fulfilled, (state, action) => {
+        const idx = state.providerServices.findIndex(s => s._id === action.payload._id);
+        if (idx !== -1) {
+          state.providerServices[idx] = action.payload;
+        }
+        const listIdx = state.serviceList.findIndex(s => s._id === action.payload._id);
+        if (listIdx !== -1) {
+          state.serviceList[listIdx] = action.payload;
+        }
+        if (state.currentService && state.currentService._id === action.payload._id) {
+          state.currentService = action.payload;
+        }
+      })
+      // Delete Service
+      .addCase(deleteService.fulfilled, (state, action) => {
+        state.providerServices = state.providerServices.filter(s => s._id !== action.payload);
+        state.serviceList = state.serviceList.filter(s => s._id !== action.payload);
       });
   },
 });

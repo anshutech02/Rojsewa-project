@@ -77,6 +77,14 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/provider/services"
+          element={
+            <ProtectedRoute allowedRoles={['provider']}>
+              <ProviderDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected Admin Routes */}
         <Route

@@ -1,5 +1,6 @@
 import Provider from '../models/Provider.js';
 import Booking from '../models/Booking.js';
+import Service from '../models/Service.js';
 
 // @desc    Get Provider Dashboard Stats & Bookings
 // @route   GET /api/provider/dashboard
@@ -17,6 +18,7 @@ export const getProviderDashboard = async (req, res, next) => {
     const pendingCount = await Booking.countDocuments({ provider: provider._id, status: 'pending' });
     const activeCount = await Booking.countDocuments({ provider: provider._id, status: { $in: ['accepted', 'in_progress'] } });
     const completedCount = await Booking.countDocuments({ provider: provider._id, status: 'completed' });
+    const totalServicesCount = await Service.countDocuments({ provider: provider._id });
 
     // Recent bookings
     const recentBookings = await Booking.find({ provider: provider._id })
@@ -34,6 +36,7 @@ export const getProviderDashboard = async (req, res, next) => {
         completedBookings: completedCount,
         totalEarnings: provider.totalEarnings,
         rating: provider.rating,
+        totalServices: totalServicesCount,
       },
       recentBookings,
     });

@@ -12,6 +12,7 @@ import reviewRoutes from './routes/review.routes.js';
 import providerRoutes from './routes/provider.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import categoryRoutes from './routes/category.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
 import { errorHandler, notFound } from './middleware/error.middleware.js';
 
 const app = express();
@@ -54,6 +55,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/provider', providerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Error handling
 app.use(notFound);

@@ -217,9 +217,21 @@ export class FileModel {
         delete items[idx].comparePassword;
         delete items[idx].populate;
         delete items[idx].toJSON;
+        delete items[idx].deleteOne;
         self.write(items);
       }
       return self.wrapDoc(wrapped);
+    };
+
+    // Standard deleteOne method
+    wrapped.deleteOne = async function() {
+      const items = self.read();
+      const idx = items.findIndex(item => item._id === wrapped._id);
+      if (idx !== -1) {
+        items.splice(idx, 1);
+        self.write(items);
+      }
+      return { deletedCount: 1 };
     };
 
     wrapped.populate = function() {
@@ -234,6 +246,7 @@ export class FileModel {
       delete copy.comparePassword;
       delete copy.populate;
       delete copy.toJSON;
+      delete copy.deleteOne;
       return copy;
     };
 

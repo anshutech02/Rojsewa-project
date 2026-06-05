@@ -57,21 +57,19 @@ const RegisterPage = () => {
           <div className="grid grid-cols-2 gap-2 p-1 bg-zinc-900 rounded-xl">
             <button
               onClick={() => setRole('customer')}
-              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${
-                role === 'customer' 
-                  ? 'bg-zinc-800 text-white shadow' 
+              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${role === 'customer'
+                  ? 'bg-zinc-800 text-white shadow'
                   : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+                }`}
             >
               Customer
             </button>
             <button
               onClick={() => setRole('provider')}
-              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${
-                role === 'provider' 
-                  ? 'bg-indigo-600 text-white shadow shadow-indigo-600/10' 
+              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${role === 'provider'
+                  ? 'bg-indigo-600 text-white shadow shadow-indigo-600/10'
                   : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+                }`}
             >
               Service Provider
             </button>
@@ -91,7 +89,7 @@ const RegisterPage = () => {
                 type="email"
                 placeholder="john@example.com"
                 error={errors.email}
-                {...register('email', { 
+                {...register('email', {
                   required: 'Email is required',
                   pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' }
                 })}
@@ -110,7 +108,7 @@ const RegisterPage = () => {
                 type="password"
                 placeholder="Min 6 characters"
                 error={errors.password}
-                {...register('password', { 
+                {...register('password', {
                   required: 'Password is required',
                   minLength: { value: 6, message: 'Password must be at least 6 characters' }
                 })}
@@ -119,7 +117,7 @@ const RegisterPage = () => {
               {role === 'provider' && (
                 <div className="flex flex-col gap-4 border-t border-zinc-800/80 pt-4 mt-2">
                   <h3 className="text-sm font-bold text-indigo-400">Professional details</h3>
-                  
+
                   <Input
                     label="Skills (Comma-separated)"
                     placeholder="Electrician, Wiring, Inverter repair"

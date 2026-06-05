@@ -5,7 +5,11 @@ import Category from '../models/Category.js';
 // @access  Public
 export const getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find({ isActive: true }).sort('sortOrder');
+    const query = {};
+    if (req.query.all !== 'true') {
+      query.isActive = true;
+    }
+    const categories = await Category.find(query).sort('sortOrder');
     res.status(200).json({ success: true, count: categories.length, categories });
   } catch (error) {
     next(error);

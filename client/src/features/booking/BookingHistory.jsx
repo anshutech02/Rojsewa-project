@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 const BookingHistory = () => {
   const dispatch = useDispatch();
   const { bookings, loading } = useSelector((state) => state.bookings);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchBookings());
@@ -32,7 +33,9 @@ const BookingHistory = () => {
       <Navbar />
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
         <div>
-          <h2 className="text-3xl font-extrabold tracking-tight">Your Bookings</h2>
+          <h2 className="text-3xl font-extrabold tracking-tight">
+            {user?.role === 'admin' ? 'All Bookings' : 'Your Bookings'}
+          </h2>
           <p className="text-zinc-500 text-sm">Monitor and check current service appointments status</p>
         </div>
 

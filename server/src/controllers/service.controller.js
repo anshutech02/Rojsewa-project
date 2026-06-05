@@ -187,3 +187,23 @@ export const deleteService = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get Provider's Own Services
+// @route   GET /api/services/provider/me
+// @access  Private/Provider
+export const getProviderServices = async (req, res, next) => {
+  try {
+    const provider = await Provider.findOne({ user: req.user.id });
+    if (!provider) {
+      res.status(403);
+      return next(new Error('Only registered providers can access this'));
+    }
+
+    const services = await Service.find({ provider: provider._id })
+      .populate('category');
+
+    res.status(200).json({ success: true, count: services.length, services });
+  } catch (error) {
+    next(error);
+  }
+};
