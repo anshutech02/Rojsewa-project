@@ -40,6 +40,13 @@ const HomePage = () => {
       category: nextCat,
       city: cityFilter,
     }));
+
+    //go to featured-services section
+    const featuredSection = document.getElementById('featured-services');
+    if (featuredSection) {
+      featuredSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
   };
 
   return (
@@ -110,7 +117,7 @@ const HomePage = () => {
       </section>
 
       {/* Services Section */}
-      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col gap-8">
+      <section id='featured-services' className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col gap-8">
         <h2 className="text-2xl font-bold tracking-tight">Featured Services</h2>
 
         {loading ? (

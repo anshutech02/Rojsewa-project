@@ -68,12 +68,14 @@ const Navbar = () => {
                 </Link>
               )}
 
-              <Link to="/bookings">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <ClipboardList size={14} />
-                  {user?.role === 'admin' ? 'All Bookings' : 'My Bookings'}
-                </Button>
-              </Link>
+              {user?.role === 'customer' ? (
+                <Link to="/bookings">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <ClipboardList size={14} />
+                    My Bookings
+                  </Button>
+                </Link>
+              ) : null}
 
               <NotificationTray />
 

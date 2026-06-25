@@ -44,7 +44,7 @@ export const getAdminDashboard = async (req, res, next) => {
       .populate({ path: 'provider', populate: { path: 'user', select: 'name' } })
       .populate('service', 'title')
       .sort('-createdAt')
-      .limit(5);
+      .limit(10);
 
     res.status(200).json({
       success: true,

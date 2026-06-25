@@ -3,6 +3,7 @@ import Service from '../models/Service.js';
 import Provider from '../models/Provider.js';
 import Notification from '../models/Notification.js';
 import { sendNotification } from '../socket/index.js';
+import { sendBookingWhatsAppNotification } from '../utils/whatsappService.js';
 
 // @desc    Create Booking
 // @route   POST /api/bookings
@@ -53,6 +54,16 @@ export const createBooking = async (req, res, next) => {
     const io = req.app.get('io');
     sendNotification(io, providerUser.toString(), 'notification:new', notification);
     sendNotification(io, providerUser.toString(), 'provider:newBooking', booking);
+
+    // Send WhatsApp notifications asynchronously after populating necessary fields
+    // await booking.populate([
+    //   { path: 'customer' },
+    //   { path: 'provider', populate: { path: 'user' } },
+    //   { path: 'service' }
+    // ]);
+    // sendBookingWhatsAppNotification(booking, 'created');
+    // sendBookingWhatsAppNotification(booking, 'new_request');
+    console.log('Booking created and notifications sent successfully.');
 
     res.status(201).json({ success: true, booking });
   } catch (error) {
@@ -178,6 +189,25 @@ export const cancelBooking = async (req, res, next) => {
     sendNotification(io, notifyUserId.toString(), 'notification:new', notification);
     sendNotification(io, notifyUserId.toString(), 'booking:statusUpdate', booking);
 
+    // Send WhatsApp notification
+    let cancelledBy = 'user';
+    if (isCustomer) {
+      cancelledBy = 'customer';
+    } else if (isProvider) {
+      cancelledBy = 'provider';
+    } else if (req.user.role === 'admin') {
+      cancelledBy = 'administrator';
+    }
+
+    await booking.populate([
+      { path: 'customer' },
+      { path: 'provider', populate: { path: 'user' } }
+    ]);
+    sendBookingWhatsAppNotification(booking, 'cancelled', {
+      cancellationReason: booking.cancellationReason,
+      cancelledBy
+    });
+
     res.status(200).json({ success: true, booking });
   } catch (error) {
     next(error);
@@ -214,6 +244,7 @@ export const updateBookingStatus = async (req, res, next) => {
 
     if (status === 'completed') {
       booking.completedAt = Date.now();
+      booking.paymentStatus = 'paid';
       // Add earnings to provider
       provider.completedBookings += 1;
       provider.totalEarnings += booking.totalAmount;
@@ -234,6 +265,13 @@ export const updateBookingStatus = async (req, res, next) => {
     const io = req.app.get('io');
     sendNotification(io, booking.customer.toString(), 'notification:new', notification);
     sendNotification(io, booking.customer.toString(), 'booking:statusUpdate', booking);
+
+    // Send WhatsApp notification
+    await booking.populate([
+      { path: 'customer' },
+      { path: 'provider', populate: { path: 'user' } }
+    ]);
+    sendBookingWhatsAppNotification(booking, status);
 
     res.status(200).json({ success: true, booking });
   } catch (error) {
