@@ -37,8 +37,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl font-black tracking-tighter gradient-text">
-            ROZSEVA
+          <img
+            src="/favicon.png"
+            alt="ROZSEVA Logo"
+            className="h-10 w-10 rounded-full"
+          />
+          <span className="text-2xl font-black tracking-wide gradient-text">
+          ROZSEVA
           </span>
         </Link>
 

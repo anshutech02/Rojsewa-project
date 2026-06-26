@@ -1,4 +1,5 @@
 import Category from '../models/Category.js';
+import {uploadSingleToCloudinary}  from '../utils/uploadToCloudinary.js';
 
 // @desc    Get all categories
 // @route   GET /api/categories
@@ -41,18 +42,35 @@ export const getCategoryById = async (req, res, next) => {
 // @access  Private/Admin
 export const createCategory = async (req, res, next) => {
   try {
-    const { name, description, icon, image, parentCategory, sortOrder } = req.body;
+    console.log('Request body:', req.body);
+    console.log('Request file:', req.file);
+    const { name, description, parentCategory, sortOrder } = req.body;
+
+    // Check if file exists
+    if (!req.file) {
+      res.status(400);
+      return next(new Error('Please upload an image'));
+    }
+
+    const result = await uploadSingleToCloudinary(req.file.buffer);
+
+    if (!result) {
+      res.status(400);
+      return next(new Error('Image upload failed'));
+    }
 
     const category = await Category.create({
       name,
       description,
-      icon,
-      image,
+      image: result.secure_url,
       parentCategory: parentCategory || null,
       sortOrder: sortOrder || 0
     });
 
-    res.status(201).json({ success: true, category });
+    res.status(201).json({
+      success: true,
+      category
+    });
   } catch (error) {
     next(error);
   }
@@ -61,12 +79,50 @@ export const createCategory = async (req, res, next) => {
 // @desc    Update Category
 // @route   PUT /api/categories/:id
 // @access  Private/Admin
+// export const updateCategory = async (req, res, next) => {
+//   try {
+//     const { name, description, parentCategory, sortOrder, isActive } = req.body;
+//     const image = req.file 
+//     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//       runValidators: true
+//     });
+
+//     if (!category) {
+//       res.status(404);
+//       return next(new Error('Category not found'));
+//     }
+
+//     res.status(200).json({ success: true, category });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 export const updateCategory = async (req, res, next) => {
   try {
-    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      const result = await uploadSingleToCloudinary(
+        req.file.buffer
+      );
+
+      if (!result) {
+        res.status(400);
+        return next(new Error('Image upload failed'));
+      }
+
+      updateData.image = result.secure_url;
+    }
+
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
 
     if (!category) {
       res.status(404);
@@ -78,6 +134,7 @@ export const updateCategory = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // @desc    Delete Category
 // @route   DELETE /api/categories/:id
