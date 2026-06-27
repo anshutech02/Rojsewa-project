@@ -50,7 +50,7 @@ const RegisterPage = () => {
         <div className="w-full max-w-lg flex flex-col gap-6">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold tracking-tight">Create Account</h2>
-            <p className="text-sm text-zinc-500 mt-2">Join ROZSEVA as a customer or service provider</p>
+            <p className="text-sm text-zinc-500 mt-2">Join ROJSEWA as a customer or service provider</p>
           </div>
 
           {/* Role selector */}

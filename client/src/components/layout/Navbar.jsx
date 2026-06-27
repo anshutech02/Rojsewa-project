@@ -33,7 +33,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
@@ -42,8 +42,8 @@ const Navbar = () => {
             alt="ROZSEVA Logo"
             className="h-10 w-10 rounded-full"
           />
-          <span className="text-2xl font-black tracking-wide gradient-text">
-          ROZSEVA
+          <span className=" md:text-2xl font-black tracking-wide gradient-text">
+          ROJSEWA
           </span>
         </Link>
 
@@ -129,8 +129,8 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-zinc-800 bg-zinc-950 px-4 py-4">
-          <div className="flex flex-col gap-3">
+        <div className="absolute top-full left-0 right-0  md:hidden border-t border-zinc-800 bg-zinc-950 px-4 py-4 ">
+          <div className="flex flex-col gap-3 ">
             {isAuthenticated ? (
               <>
                 {user?.role === 'provider' && (
