@@ -212,7 +212,7 @@ const Navbar = () => {
               </>
             ) : (
               <>
-              //navigate to login and register page on click and close the menu
+              
                 <Link
                   to="/login"
                   onClick={() => setIsOpen(false)}
