@@ -217,7 +217,7 @@ const HomePage = () => {
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-col sm:flex-row gap-2 glass p-2 rounded-2xl"
+                  className="mx-auto flex flex-col sm:flex-row gap-2 glass !bg-white/10  p-2 rounded-2xl"
                 >
                   {/* Search Input */}
                   <div className="relative flex items-center w-full">
