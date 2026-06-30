@@ -128,6 +128,11 @@ const HomePage = () => {
       featuredSection.scrollIntoView({ behavior: "smooth" });
     }
   };
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
+  const visibleCategories = showAllCategories
+    ? categories
+    : categories.slice(0, 8);
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50">
@@ -155,11 +160,11 @@ const HomePage = () => {
               /* ==========================================================================
        1. STICKY SEARCH BAR (Fixed to top on scroll)
        ========================================================================== */
-              <div className="fixed top-[56px] sm:top-[64px]  left-0 right-0 z-40 px-4 py-2 transition-all duration-300">
+              <div className="fixed top-[56px] sm:top-[64px] left-0 right-0 z-40 px-4 py-2 mt-1 transition-all duration-300">
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-row gap-2 items-center"
+                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/10 p-2 rounded-2xl"
                 >
                   {/* Search Term Input Field */}
                   <div className="flex-1 relative flex items-center w-full h-full min-w-0">
@@ -206,8 +211,8 @@ const HomePage = () => {
               </div>
             ) : (
               /* ==========================================================================
-       2. NON-STICKY SEARCH BAR (Standard Inline Layout)
-       ========================================================================== */
+2. NON-STICKY SEARCH BAR (Standard Inline Layout)
+========================================================================== */
               <div className="relative px-0">
                 <form
                   ref={searchBarRef}
@@ -253,15 +258,7 @@ const HomePage = () => {
                     ref={actionButtonRef}
                     type="submit"
                     aria-label="Submit Search"
-                    className="
-        w-full sm:w-auto
-        flex items-center justify-center
-        bg-indigo-600 hover:bg-indigo-700
-        text-white rounded-xl
-        px-5 py-2
-        transition-colors
-        shadow-md shrink-0
-      "
+                    className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-5 py-2 transition-colors shadow-md shrink-0"
                   >
                     Search
                   </button>
@@ -273,44 +270,107 @@ const HomePage = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 flex flex-col gap-8">
-        <div>
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-            Browse by Category
-          </h2>
-          <p className="text-zinc-500 text-xs md:text-sm">
-            Select a category to filter the services list
-          </p>
+
+      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+        {/* Header */}
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <h2 className="text-xl md:text-3xl font-bold tracking-tight">
+              Browse by Category
+            </h2>
+            <p className="text-zinc-500 text-sm mt-1">
+              Select a category to filter services
+            </p>
+          </div>
+
+          {categories.length > 8 && (
+            <button
+              onClick={() => setShowAllCategories(!showAllCategories)}
+              className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+            >
+              {showAllCategories ? "Show Less" : "See All"}
+            </button>
+          )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 md:gap-6">
-          {categories.map((cat) => (
+        {/* Categories Grid */}
+        <div
+          className={`
+      grid gap-3 md:gap-5
+      grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8
+      transition-all duration-300
+    `}
+        >
+          {visibleCategories.map((cat) => (
             <Card
               key={cat._id}
               onClick={() => selectCategory(cat._id)}
-              className={`flex flex-col items-center gap-3 md:gap-4 p-3 md:p-4 justify-center text-center cursor-pointer transition-all duration-300 backdrop-blur-md rounded-xl md:rounded-2xl border ${
-                selectedCategory === cat._id
-                  ? "border-indigo-500/50 bg-indigo-500/10 shadow-lg shadow-indigo-500/20 text-white scale-[1.02]"
-                  : "border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 text-zinc-300"
-              }`}
+              className={`
+          group relative overflow-hidden
+          flex flex-col items-center justify-between
+          text-center cursor-pointer
+          p-2 md:p-5
+          rounded-2xl
+          backdrop-blur-md border
+          transition-all duration-300
+
+          ${
+            selectedCategory === cat._id
+              ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20 scale-[1.03]"
+              : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
+          }
+        `}
             >
-              <span className="text-2xl md:text-3xl drop-shadow-[0_4px_12px_rgba(255,255,255,0.1)]">
+              {/* Glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+              {/* Icon */}
+              <div className="relative z-10 mb-2">
                 {cat.image ? (
                   <img
                     src={cat.image}
                     alt={cat.name}
-                    className="w-8 h-8 md:w-10 md:h-10 object-cover rounded-lg"
+                    className="w-full md:w-16 md:h-16 rounded-xl object-cover"
                   />
                 ) : (
-                  "🔧"
+                  <span className="text-3xl">🔧</span>
                 )}
-              </span>
-              <span className="text-[10px] md:text-xs font-semibold tracking-wide transition-colors">
+              </div>
+
+              {/* Name */}
+              <span
+                className={`
+            relative z-10
+            text-[11px] md:text-sm
+            font-medium leading-tight
+            line-clamp-2
+
+            ${selectedCategory === cat._id ? "text-indigo-200" : "text-zinc-300"}
+          `}
+              >
                 {cat.name}
               </span>
             </Card>
           ))}
         </div>
+
+        {/* Mobile Show More Button */}
+        {categories.length > 8 && (
+          <div className="flex justify-center mt-6 sm:hidden">
+            <button
+              onClick={() => setShowAllCategories(!showAllCategories)}
+              className="
+          px-5 py-2 rounded-full
+          bg-white/5 border border-white/10
+          text-sm text-zinc-300
+          hover:bg-white/10
+          transition-all
+        "
+            >
+              {showAllCategories ? "Show Less" : "View More Categories"}
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Services Section */}

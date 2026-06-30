@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
+  Home
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import NotificationTray from '../shared/NotificationTray.jsx';
@@ -90,7 +91,7 @@ const Navbar = () => {
                   Profile
                 </Button>
               </Link>
-
+              {/* Logout button */}
               <Button
                 variant="secondary"
                 size="sm"
@@ -133,6 +134,17 @@ const Navbar = () => {
           <div className="flex flex-col gap-3 ">
             {isAuthenticated ? (
               <>
+                <Link
+                  to="/"
+                >
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Home size={16} />
+                    Home
+                  </Button>
+                </Link>
                 {user?.role === 'provider' && (
                   <Link
                     to="/provider"

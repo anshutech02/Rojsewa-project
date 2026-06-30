@@ -56,7 +56,7 @@ export const getServices = async (req, res, next) => {
         return true;
       });
     }
-    console.log("Filtered Services:", services);
+    
     res.status(200).json({ success: true, count: services.length, services: services });
   } catch (error) {
     next(error);

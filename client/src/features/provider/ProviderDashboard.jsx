@@ -54,7 +54,7 @@ const ProviderDashboard = () => {
     loading: servicesLoading,
   } = useSelector((state) => state.services);
   const { provider } = useSelector((state) => state.auth);
-  console.log("ProviderDashboard provider:", provider);
+  
 
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(true);
