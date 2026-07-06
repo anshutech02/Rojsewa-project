@@ -24,7 +24,7 @@ app.use(cors({
   credentials: true,
 }));
 
-// Rate limiting
+// Rate limiting for production environment
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000,
 //   max: process.env.NODE_ENV === 'development' ? 10000 : 100,
