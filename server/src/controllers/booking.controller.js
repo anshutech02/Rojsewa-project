@@ -10,6 +10,10 @@ import { sendBookingWhatsAppNotification } from '../utils/whatsappService.js';
 // @access  Private/Customer
 export const createBooking = async (req, res, next) => {
   try {
+    if(req.user.isVerified === false) {
+      res.status(403);
+      return next(new Error('Your email is not verified. Please verify your email to create bookings.'));
+    }
     const { serviceId, bookingType, scheduledDate, scheduledTime, address, notes, paymentMethod } = req.body;
 
     const service = await Service.findById(serviceId).populate('provider');

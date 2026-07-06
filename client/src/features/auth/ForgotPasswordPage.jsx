@@ -1,32 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../store/authSlice.js';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Input from '../../components/ui/Input.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Navbar from '../../components/layout/Navbar.jsx';
 import Footer from '../../components/layout/Footer.jsx';
+import api from '../../utils/api.js';
 import toast from 'react-hot-toast';
 
-const LoginPage = () => {
-  const dispatch = useDispatch();
+const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const { loading } = useSelector((state) => state.auth);
-
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    dispatch(loginUser(data))
-      .unwrap()
-      .then(() => {
-        toast.success('Logged in successfully!');
-        navigate('/');
-      })
-      .catch((err) => {
-        toast.error(err || 'Invalid email or password');
-      });
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      await api.post('/auth/forgot-password', { email: data.email });
+      toast.success('OTP sent successfully to your email!');
+      // Navigate to reset password page with email as a query parameter
+      navigate(`/reset-password?email=${encodeURIComponent(data.email)}`);
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to send OTP. Please check your email.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,8 +34,8 @@ const LoginPage = () => {
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md flex flex-col gap-6">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight">Welcome Back</h2>
-            <p className="text-sm text-zinc-500 mt-2">Sign in to book and manage services</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-white">Forgot Password</h2>
+            <p className="text-sm text-zinc-400 mt-2">Enter your email address to receive a 6-digit OTP code</p>
           </div>
 
           <Card hoverEffect={false} className="p-8">
@@ -52,31 +51,16 @@ const LoginPage = () => {
                 })}
               />
 
-              <div className="flex flex-col gap-1.5">
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="••••••••"
-                  error={errors.password}
-                  {...register('password', { required: 'Password is required' })}
-                />
-                <div className="flex justify-end">
-                  <Link to="/forgot-password" className="text-xs text-indigo-400 font-medium hover:underline">
-                    Forgot Password?
-                  </Link>
-                </div>
-              </div>
-
               <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
-                Sign In
+                Send OTP
               </Button>
             </form>
           </Card>
 
           <p className="text-center text-sm text-zinc-400">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-400 font-medium hover:underline">
-              Create an account
+            Remembered your password?{' '}
+            <Link to="/login" className="text-indigo-400 font-medium hover:underline">
+              Back to Login
             </Link>
           </p>
         </div>
@@ -86,4 +70,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

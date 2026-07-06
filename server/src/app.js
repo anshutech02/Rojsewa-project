@@ -20,7 +20,7 @@ const app = express();
 // Security
 app.use(helmet());
 app.use(cors({
-  origin: 'https://rojsewa-six.vercel.app' || 'http://localhost:5173',
+  origin: ['https://rojsewa-six.vercel.app', 'http://localhost:5173'],
   credentials: true,
 }));
 

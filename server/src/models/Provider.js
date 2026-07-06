@@ -85,7 +85,7 @@ const providerSchema = new mongoose.Schema({
 
 // Populate user data by default
 providerSchema.pre(/^find/, function () {
-  this.populate('user', 'name email phone avatar address');
+  this.populate('user', 'name email phone avatar address isVerified');
 });
 
 const Provider = createModelProxy('Provider', providerSchema);

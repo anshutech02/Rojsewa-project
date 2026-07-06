@@ -5,6 +5,9 @@ import { getMe } from './store/authSlice.js';
 import HomePage from './features/services/HomePage.jsx';
 import LoginPage from './features/auth/LoginPage.jsx';
 import RegisterPage from './features/auth/RegisterPage.jsx';
+import ForgotPasswordPage from './features/auth/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './features/auth/ResetPasswordPage.jsx';
+import VerifyEmailPage from './features/auth/VerifyEmailPage.jsx';
 import ProfilePage from './features/auth/ProfilePage.jsx';
 import ServiceDetailPage from './features/services/ServiceDetailPage.jsx';
 import BookingFlow from './features/booking/BookingFlow.jsx';
@@ -32,6 +35,8 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/services/:id" element={<ServiceDetailPage />} />
 
         {/* Protected Customer Routes */}
@@ -40,6 +45,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <ProtectedRoute>
+              <VerifyEmailPage />
             </ProtectedRoute>
           }
         />

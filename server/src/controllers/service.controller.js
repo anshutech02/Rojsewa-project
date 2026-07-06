@@ -96,7 +96,12 @@ export const createService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Only registered providers can create services'));
     }
-
+    console.log('Provider:', provider);
+    console.log('Provider user:', provider.user);
+    if(provider.user.isVerified === false) {
+      res.status(403);
+      return next(new Error('Your email is not verified. Please verify your email to create services.'));
+    }
     if (!provider.isApproved) {
       res.status(403);
       return next(new Error('Your provider account is pending approval'));
@@ -128,10 +133,18 @@ export const createService = async (req, res, next) => {
 // @access  Private/Provider
 export const updateService = async (req, res, next) => {
   try {
-    const provider = await Provider.findOne({ user: req.user.id });
+    const provider = await Provider.findOne({ user: req.user.id }).populate('user');
     if (!provider) {
       res.status(403);
       return next(new Error('Not authorized'));
+    }
+    if(provider.user.isVerified === false) {
+      res.status(403);
+      return next(new Error('Your email is not verified. Please verify your email to update services.'));
+    }
+    if (!provider.isApproved) {
+      res.status(403);
+      return next(new Error('Your provider account is pending approval'));
     }
 
     let service = await Service.findById(req.params.id);

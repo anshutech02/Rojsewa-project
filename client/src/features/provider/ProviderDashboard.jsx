@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   fetchBookings,
   updateBookingStatus,
@@ -197,6 +197,18 @@ const ProviderDashboard = () => {
       title="Provider Control Panel"
       sidebarLinks={providerLinks}
     >
+      {/* Email Verification Banner */}
+      {provider.user && !provider.user.isVerified && (
+        <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs md:text-sm font-medium py-2.5 px-4 text-center flex items-center justify-center gap-2 border-t border-amber-500/20">
+          <span>⚠️ Your email is not verified. Please verify it to secure your account.</span>
+          <Link
+            to="/verify-email"
+            className="underline hover:text-amber-100 transition-colors ml-1 font-bold"
+          >
+            Verify Now
+          </Link>
+        </div>
+      )}
       {/* Top metrics bar */}
       {statsLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -455,7 +467,7 @@ const ProviderDashboard = () => {
                   className="mt-4 p-4 text-center border border-amber-500/20 bg-amber-500/5"
                 >
                   <p className="text-amber-400 font-semibold">
-                    ⏳ Your account is not yet approved by the admin.
+                    ⏳ Your account is not yet approved by the admin. Please verify your email and wait for approval to create services.
                   </p>
                   <p className="text-sm text-zinc-400 mt-1">
                     Once your profile is reviewed and approved by the admin,
@@ -593,6 +605,7 @@ const ProviderDashboard = () => {
           loading={formLoading}
         />
       </Modal>
+      
     </DashboardLayout>
   );
 };

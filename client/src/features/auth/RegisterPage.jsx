@@ -35,8 +35,8 @@ const RegisterPage = () => {
     dispatch(registerUser(signupData))
       .unwrap()
       .then(() => {
-        toast.success('Registration successful!');
-        navigate('/');
+        toast.success('Registration successful! Please verify your email.');
+        navigate('/verify-email');
       })
       .catch((err) => {
         toast.error(err || 'Registration failed');

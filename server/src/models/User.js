@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
+  resetPasswordOtp:{
+    type: String,
+    default: null,
+  },
+  resetPasswordOtpExpire: {
+    type: Date,
+    default: null,
+  },
   phone: {
     type: String,
     trim: true,
@@ -48,6 +56,14 @@ const userSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false,
+  },
+  verificationOtp: {
+    type: String,
+    default: null,
+  },
+  verificationOtpExpire: {
+    type: Date,
+    default: null,
   },
   refreshToken: {
     type: String,
