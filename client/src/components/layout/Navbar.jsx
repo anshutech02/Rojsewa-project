@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   Menu,
   X,
-  Home
+  Home,
+  MailWarning
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import NotificationTray from '../shared/NotificationTray.jsx';
@@ -52,6 +53,19 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center gap-4">
           {isAuthenticated ? (
             <>
+              {user && !user.isVerified && (
+                <Link to="/verify-email">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
+                  >
+                    <MailWarning size={14} />
+                    Verify Email
+                  </Button>
+                </Link>
+              )}
+
               {user?.role === 'provider' && (
                 <Link to="/provider">
                   <Button variant="outline" size="sm" className="gap-2">
@@ -145,6 +159,21 @@ const Navbar = () => {
                     Home
                   </Button>
                 </Link>
+
+                {user && !user.isVerified && (
+                  <Link
+                    to="/verify-email"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10"
+                    >
+                      <MailWarning size={16} />
+                      Verify Email
+                    </Button>
+                  </Link>
+                )}
                 {user?.role === 'provider' && (
                   <Link
                     to="/provider"

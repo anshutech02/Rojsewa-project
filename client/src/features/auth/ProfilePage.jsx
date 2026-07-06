@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { getMe, updateProfile } from '../../store/authSlice.js';
 import { useForm } from 'react-hook-form';
 import Navbar from '../../components/layout/Navbar.jsx';
@@ -94,6 +95,30 @@ const ProfilePage = () => {
             </Button>
           )}
         </div>
+
+        {/* Email Verification Status */}
+        {user && !user.isVerified && (
+          <div className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-amber-500/30 bg-amber-500/5">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <p className="text-sm text-amber-300">
+                Your email <span className="font-semibold text-amber-200">{user.email}</span> is not verified yet.
+              </p>
+            </div>
+            <Link to="/verify-email">
+              <Button variant="outline" size="sm" className="text-amber-400 border-amber-500/30 hover:bg-amber-500/10 whitespace-nowrap">
+                Verify Now
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {user && user.isVerified && (
+          <div className="flex items-center gap-3 px-5 py-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
+            <div className="w-2 h-2 rounded-full bg-emerald-400" />
+            <p className="text-sm text-emerald-400">Email verified ✓</p>
+          </div>
+        )}
 
         <Card hoverEffect={false} className="p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
