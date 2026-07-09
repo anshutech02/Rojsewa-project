@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const reviewSchema = new mongoose.Schema({
   booking: {
@@ -36,5 +35,5 @@ const reviewSchema = new mongoose.Schema({
 reviewSchema.index({ provider: 1, createdAt: -1 });
 reviewSchema.index({ booking: 1 }, { unique: true });
 
-const Review = createModelProxy('Review', reviewSchema);
+const Review = mongoose.model('Review', reviewSchema);
 export default Review;

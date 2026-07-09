@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const serviceSchema = new mongoose.Schema({
   provider: {
@@ -60,5 +59,5 @@ serviceSchema.index({ title: 'text', description: 'text', tags: 'text' });
 serviceSchema.index({ category: 1, isActive: 1 });
 serviceSchema.index({ provider: 1 });
 
-const Service = createModelProxy('Service', serviceSchema);
+const Service = mongoose.model('Service', serviceSchema);
 export default Service;

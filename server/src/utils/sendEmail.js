@@ -3,51 +3,39 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Validate email config at startup
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-  console.error("⚠️  EMAIL_USER or EMAIL_PASS environment variable is missing! Email sending will fail.");
-  console.error("   Make sure these are set in your deployment platform (e.g., Render Environment Variables).");
+  console.error("EMAIL_USER or EMAIL_PASS is missing.");
 }
 
+
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
+});
+
+transporter.verify((err, success) => {
+  console.log(err || success);
 });
 
 export const sendEmail = async ({ to, subject, html }) => {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error(
-        "Email configuration missing: EMAIL_USER and EMAIL_PASS must be set as environment variables on your deployment platform."
-      );
-    }
-
     const info = await transporter.sendMail({
-      from: `"Rojsewa" <${process.env.EMAIL_USER}>`,
+      from: `"RojSewa" <${process.env.EMAIL_FROM}>`,
       to,
       subject,
       html,
     });
 
     console.log("Email sent:", info.messageId);
-
     return info;
   } catch (error) {
-    console.error("Email Error:", error.message);
-    console.error("Email Error Details:", {
-      code: error.code,
-      command: error.command,
-      to,
-      subject,
-    });
+    console.error("Email Error:", error);
     throw error;
   }
 };

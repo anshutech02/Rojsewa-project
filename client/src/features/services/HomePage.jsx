@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchServices, fetchCategories } from "../../store/serviceSlice.js";
-import { Search, MapPin, Star, Shield, Clock } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  Star,
+  Shield,
+  Clock,
+  LucideTruckElectric,
+} from "lucide-react";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
 import Input from "../../components/ui/Input.jsx";
@@ -15,6 +22,7 @@ const HomePage = () => {
   const { serviceList, categories, loading } = useSelector(
     (state) => state.services,
   );
+  console.log("Service List:", serviceList);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -305,48 +313,59 @@ const HomePage = () => {
             <Card
               key={cat._id}
               onClick={() => selectCategory(cat._id)}
+              hoverEffect={
+                selectedCategory !== cat._id
+              } /* Disables generic hover if already active */
               className={`
-          group relative overflow-hidden
-          flex flex-col items-center justify-between
-          text-center cursor-pointer
-          p-2 md:p-5
-          rounded-2xl
-          backdrop-blur-md border
-          transition-all duration-300
+    group relative w-full overflow-hidden
+    flex flex-col items-center justify-between
+    text-center p-3 md:p-5
+    transition-all duration-300 ease-out
 
-          ${
-            selectedCategory === cat._id
-              ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20 scale-[1.03]"
-              : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
-          }
-        `}
+    ${
+      selectedCategory === cat._id
+        ? "border-indigo-500/80 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 scale-[1.02]"
+        : "border-white/5 bg-white/[0.02]"
+    }
+  `}
             >
-              {/* Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Modern Ambient Glow — Only active when category matches */}
+              <div
+                className={`
+      absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent 
+      opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none
+      ${selectedCategory === cat._id ? "opacity-40" : ""}
+    `}
+              />
 
-              {/* Icon */}
-              <div className="relative z-10 mb-2">
+              {/* Image or Fallback Icon Container */}
+              <div className="relative z-10 w-full flex justify-center mb-3">
                 {cat.image ? (
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full md:w-16 md:h-16 rounded-xl object-cover"
-                  />
+                  <div className="w-28 h- md:w-full md:h-28 rounded-xl overflow-hidden bg-zinc-900/40 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
                 ) : (
-                  <span className="text-3xl">🔧</span>
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-zinc-800/50 border border-white/5 flex items-center justify-center text-2xl md:text-3xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <span>🔧</span>
+                  </div>
                 )}
               </div>
 
-              {/* Name */}
+              {/* Category Name Typography */}
               <span
                 className={`
-            relative z-10
-            text-[11px] md:text-sm
-            font-medium leading-tight
-            line-clamp-2
+      relative z-10 w-full
+      text-xs md:text-sm font-medium 
+      tracking-wide leading-snug line-clamp-2
+      transition-colors duration-300
 
-            ${selectedCategory === cat._id ? "text-indigo-200" : "text-zinc-300"}
-          `}
+      ${selectedCategory === cat._id ? "text-indigo-300 font-semibold" : "text-zinc-400 group-hover:text-zinc-200"}
+    `}
               >
                 {cat.name}
               </span>
@@ -400,6 +419,10 @@ const HomePage = () => {
               <Card
                 key={service._id}
                 className="flex flex-col h-full justify-between gap-4 border-zinc-800/80 bg-zinc-900/20 hover:bg-zinc-900/40 transition-all"
+                style={{
+                  backgroundImage: service?.category?.backgroundImage?.length
+                    ? `url(${service.category.backgroundImage})` : 'none'
+                }}
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-start gap-2">

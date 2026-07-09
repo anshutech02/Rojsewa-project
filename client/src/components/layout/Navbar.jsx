@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../../store/authSlice.js';
-import Button from '../ui/Button.jsx';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../../store/authSlice.js";
+import Button from "../ui/Button.jsx";
+import api from "../../utils/api.js";
 import {
   LogOut,
   User,
@@ -12,10 +13,10 @@ import {
   Menu,
   X,
   Home,
-  MailWarning
-} from 'lucide-react';
-import toast from 'react-hot-toast';
-import NotificationTray from '../shared/NotificationTray.jsx';
+  MailWarning,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import NotificationTray from "../shared/NotificationTray.jsx";
 
 const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -28,8 +29,8 @@ const Navbar = () => {
     dispatch(logoutUser())
       .unwrap()
       .then(() => {
-        toast.success('Logged out successfully');
-        navigate('/');
+        toast.success("Logged out successfully");
+        navigate("/");
       })
       .catch((err) => toast.error(err));
   };
@@ -45,7 +46,7 @@ const Navbar = () => {
             className="h-10 w-10 rounded-full"
           />
           <span className=" md:text-2xl font-black tracking-wide gradient-text">
-          ROJSEWA
+            ROJSEWA
           </span>
         </Link>
 
@@ -54,19 +55,29 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               {user && !user.isVerified && (
-                <Link to="/verify-email">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
-                  >
-                    <MailWarning size={14} />
-                    Verify Email
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
+                  onClick={async () => {
+                    try {
+                      await api.post("/auth/send-verification-otp");
+                      toast.success("Verification code sent.");
+                      navigate("/verify-email");
+                    } catch (err) {
+                      toast.error(
+                        err.response?.data?.error ||
+                          "Failed to send verification code.",
+                      );
+                    }
+                  }}
+                >
+                  <MailWarning size={14} />
+                  Verify Email
+                </Button>
               )}
 
-              {user?.role === 'provider' && (
+              {user?.role === "provider" && (
                 <Link to="/provider">
                   <Button variant="outline" size="sm" className="gap-2">
                     <LayoutDashboard size={14} />
@@ -75,7 +86,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              {user?.role === 'admin' && (
+              {user?.role === "admin" && (
                 <Link to="/admin">
                   <Button
                     variant="outline"
@@ -88,7 +99,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              {user?.role === 'customer' ? (
+              {user?.role === "customer" ? (
                 <Link to="/bookings">
                   <Button variant="ghost" size="sm" className="gap-2">
                     <ClipboardList size={14} />
@@ -148,9 +159,7 @@ const Navbar = () => {
           <div className="flex flex-col gap-3 ">
             {isAuthenticated ? (
               <>
-                <Link
-                  to="/"
-                >
+                <Link to="/">
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-2"
@@ -161,10 +170,7 @@ const Navbar = () => {
                 </Link>
 
                 {user && !user.isVerified && (
-                  <Link
-                    to="/verify-email"
-                    onClick={() => setIsOpen(false)}
-                  >
+                  <Link to="/verify-email" onClick={() => setIsOpen(false)}>
                     <Button
                       variant="outline"
                       className="w-full justify-start gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10"
@@ -174,11 +180,8 @@ const Navbar = () => {
                     </Button>
                   </Link>
                 )}
-                {user?.role === 'provider' && (
-                  <Link
-                    to="/provider"
-                    onClick={() => setIsOpen(false)}
-                  >
+                {user?.role === "provider" && (
+                  <Link to="/provider" onClick={() => setIsOpen(false)}>
                     <Button
                       variant="outline"
                       className="w-full justify-start gap-2"
@@ -189,11 +192,8 @@ const Navbar = () => {
                   </Link>
                 )}
 
-                {user?.role === 'admin' && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setIsOpen(false)}
-                  >
+                {user?.role === "admin" && (
+                  <Link to="/admin" onClick={() => setIsOpen(false)}>
                     <Button
                       variant="outline"
                       className="w-full justify-start gap-2"
@@ -204,23 +204,17 @@ const Navbar = () => {
                   </Link>
                 )}
 
-                <Link
-                  to="/bookings"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/bookings" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-2"
                   >
                     <ClipboardList size={16} />
-                    {user?.role === 'admin' ? 'All Bookings' : 'My Bookings'}
+                    {user?.role === "admin" ? "All Bookings" : "My Bookings"}
                   </Button>
                 </Link>
 
-                <Link
-                  to="/profile"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/profile" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-2"
@@ -241,20 +235,13 @@ const Navbar = () => {
               </>
             ) : (
               <>
-              
-                <Link
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/login" onClick={() => setIsOpen(false)}>
                   <Button variant="ghost" className="w-full">
                     Login
                   </Button>
                 </Link>
 
-                <Link
-                  to="/register"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/register" onClick={() => setIsOpen(false)}>
                   <Button variant="primary" className="w-full">
                     Join as Provider
                   </Button>
@@ -264,8 +251,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      
-      
     </header>
   );
 };

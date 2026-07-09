@@ -36,6 +36,7 @@ import {
   Sparkles,
   DollarSign,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import api from "../../utils/api.js";
 import toast from "react-hot-toast";
 
@@ -54,7 +55,6 @@ const ProviderDashboard = () => {
     loading: servicesLoading,
   } = useSelector((state) => state.services);
   const { provider } = useSelector((state) => state.auth);
-  
 
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(true);
@@ -192,6 +192,59 @@ const ProviderDashboard = () => {
     );
   }
 
+  const getWhatsAppMessage = (booking) => {
+    const date = new Date(booking.scheduledDate).toLocaleDateString();
+
+    switch (booking.status) {
+      case "accepted":
+        return `👋 Hello ${booking.customer?.name},
+
+I'm your service provider for your booking.
+
+✅ Your booking has been *accepted*.
+
+🛠 Service: ${booking.service?.title}
+📅 Date: ${date}
+🕒 Time: ${booking.scheduledTime}
+
+If you have any questions, need to share your location, or want to discuss any details before the visit, feel free to message me here.
+
+Thank you! Looking forward to serving you. 😊`;
+
+      case "in_progress":
+        return `👋 Hello ${booking.customer?.name},
+
+I'm currently on your service request.
+
+🚧 Booking Status: *Service In Progress*
+
+🛠 Service: ${booking.service?.title}
+📅 Date: ${date}
+🕒 Time: ${booking.scheduledTime}
+
+If you need anything during the service or have any questions, you can contact me here.
+
+Thank you for choosing our service! 😊`;
+
+      default:
+        return `Hello ${booking.customer?.name},
+
+Regarding your booking for "${booking.service?.title}", feel free to contact me if you have any questions.
+
+Thank you!`;
+    }
+  };
+
+  const openWhatsApp = (booking) => {
+  const phone = booking.customer?.phone?.replace(/\D/g, "");
+  const message = getWhatsAppMessage(booking);
+
+  window.open(
+    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+};
+
   return (
     <DashboardLayout
       title="Provider Control Panel"
@@ -200,13 +253,35 @@ const ProviderDashboard = () => {
       {/* Email Verification Banner */}
       {provider.user && !provider.user.isVerified && (
         <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs md:text-sm font-medium py-2.5 px-4 text-center flex items-center justify-center gap-2 border-t border-amber-500/20">
-          <span>⚠️ Your email is not verified. Please verify it to secure your account.</span>
-          <Link
+          <span>
+            ⚠️ Your email is not verified. Please verify it to secure your
+            account.
+          </span>
+          {/* <Link
             to="/verify-email"
             className="underline hover:text-amber-100 transition-colors ml-1 font-bold"
           >
             Verify Now
-          </Link>
+          </Link> */}
+          <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
+                  onClick={async () => {
+                    try {
+                      await api.post("/auth/send-verification-otp");
+                      toast.success("Verification code sent.");
+                      navigate("/verify-email");
+                    } catch (err) {
+                      toast.error(
+                        err.response?.data?.error ||
+                          "Failed to send verification code.",
+                      );
+                    }
+                  }}
+                >
+                  Verify Email
+                </Button>
         </div>
       )}
       {/* Top metrics bar */}
@@ -399,6 +474,15 @@ const ProviderDashboard = () => {
                   {booking.status === "accepted" && (
                     <div className="flex gap-2 justify-end">
                       <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 border-green-500 text-green-400 hover:bg-green-500/10"
+                        onClick={() => openWhatsApp(booking)}
+                      >
+                        <FaWhatsapp size={16} />
+                        WhatsApp
+                      </Button>
+                      <Button
                         variant="primary"
                         size="sm"
                         className="gap-1.5"
@@ -413,6 +497,15 @@ const ProviderDashboard = () => {
 
                   {booking.status === "in_progress" && (
                     <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 border-green-500 text-green-400 hover:bg-green-500/10"
+                        onClick={() => openWhatsApp(booking)}
+                      >
+                        <FaWhatsapp size={16} />
+                        WhatsApp
+                      </Button>
                       <Button
                         variant="primary"
                         size="sm"
@@ -467,7 +560,8 @@ const ProviderDashboard = () => {
                   className="mt-4 p-4 text-center border border-amber-500/20 bg-amber-500/5"
                 >
                   <p className="text-amber-400 font-semibold">
-                    ⏳ Your account is not yet approved by the admin. Please verify your email and wait for approval to create services.
+                    ⏳ Your account is not yet approved by the admin. Please
+                    verify your email and wait for approval to create services.
                   </p>
                   <p className="text-sm text-zinc-400 mt-1">
                     Once your profile is reviewed and approved by the admin,
@@ -605,7 +699,6 @@ const ProviderDashboard = () => {
           loading={formLoading}
         />
       </Modal>
-      
     </DashboardLayout>
   );
 };

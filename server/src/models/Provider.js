@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const providerSchema = new mongoose.Schema({
   user: {
@@ -88,5 +87,5 @@ providerSchema.pre(/^find/, function () {
   this.populate('user', 'name email phone avatar address isVerified');
 });
 
-const Provider = createModelProxy('Provider', providerSchema);
+const Provider = mongoose.model('Provider', providerSchema);
 export default Provider;

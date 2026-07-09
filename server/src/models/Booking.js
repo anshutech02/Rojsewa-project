@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const bookingSchema = new mongoose.Schema({
   customer: {
@@ -75,5 +74,5 @@ bookingSchema.index({ customer: 1, status: 1 });
 bookingSchema.index({ provider: 1, status: 1 });
 bookingSchema.index({ createdAt: -1 });
 
-const Booking = createModelProxy('Booking', bookingSchema);
+const Booking = mongoose.model('Booking', bookingSchema);
 export default Booking;

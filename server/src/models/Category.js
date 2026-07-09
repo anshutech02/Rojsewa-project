@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -25,6 +24,11 @@ const categorySchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  backgroundImage: {
+    type: String,
+    default: '',
+  },
+  
   parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
@@ -49,5 +53,5 @@ categorySchema.pre('save', function () {
   }
 });
 
-const Category = createModelProxy('Category', categorySchema);
+const Category = mongoose.model('Category', categorySchema);
 export default Category;

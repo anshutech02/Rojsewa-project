@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getMe, updateProfile } from '../../store/authSlice.js';
 import { useForm } from 'react-hook-form';
 import Navbar from '../../components/layout/Navbar.jsx';
@@ -10,9 +10,12 @@ import Input from '../../components/ui/Input.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
 import toast from 'react-hot-toast';
+import api from '../../utils/api.js';
+import { MailWarning } from 'lucide-react';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, provider, loading } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -105,11 +108,26 @@ const ProfilePage = () => {
                 Your email <span className="font-semibold text-amber-200">{user.email}</span> is not verified yet.
               </p>
             </div>
-            <Link to="/verify-email">
-              <Button variant="outline" size="sm" className="text-amber-400 border-amber-500/30 hover:bg-amber-500/10 whitespace-nowrap">
-                Verify Now
-              </Button>
-            </Link>
+            <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
+                  onClick={async () => {
+                    try {
+                      await api.post("/auth/send-verification-otp");
+                      toast.success("Verification code sent.");
+                      navigate("/verify-email");
+                    } catch (err) {
+                      toast.error(
+                        err.response?.data?.error ||
+                          "Failed to send verification code.",
+                      );
+                    }
+                  }}
+                >
+                  <MailWarning size={14} />
+                  Verify Email
+                </Button>
           </div>
         )}
 

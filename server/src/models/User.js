@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -93,5 +92,5 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
-const User = createModelProxy('User', userSchema);
+const User = mongoose.model('User', userSchema);
 export default User;

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { setMongoConnected } from '../utils/modelProxy.js';
 
 const connectDB = async () => {
   try {
@@ -12,11 +11,8 @@ const connectDB = async () => {
     });
     
     console.log(`✅ MongoDB connected: ${conn.connection.host}`);
-    setMongoConnected(true);
   } catch (error) {
     console.error(`⚠️ MongoDB connection failed: ${error.message}`);
-    console.log('📂 Falling back to local file-based database (JSON files)...');
-    setMongoConnected(false);
   }
 };
 

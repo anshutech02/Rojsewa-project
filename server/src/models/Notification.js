@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { createModelProxy } from '../utils/modelProxy.js';
 
 const notificationSchema = new mongoose.Schema({
   user: {
@@ -34,5 +33,5 @@ const notificationSchema = new mongoose.Schema({
 
 notificationSchema.index({ user: 1, isRead: 1, createdAt: -1 });
 
-const Notification = createModelProxy('Notification', notificationSchema);
+const Notification = mongoose.model('Notification', notificationSchema);
 export default Notification;
