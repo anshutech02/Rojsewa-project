@@ -44,26 +44,34 @@ export const createCategory = async (req, res, next) => {
   try {
     const { name, description, parentCategory, sortOrder } = req.body;
 
-    // Check if file exists
-    if (!req.file) {
-      res.status(400);
-      return next(new Error('Please upload an image'));
-    }
-
-    const result = await uploadSingleToCloudinary(req.file.buffer);
-
-    if (!result) {
-      res.status(400);
-      return next(new Error('Image upload failed'));
-    }
-
-    const category = await Category.create({
+    const categoryData = {
       name,
       description,
-      image: result.secure_url,
       parentCategory: parentCategory || null,
-      sortOrder: sortOrder || 0
-    });
+      sortOrder: sortOrder || 0,
+    };
+
+    // Handle main image upload
+    if (req.files?.image?.[0]) {
+      const imageResult = await uploadSingleToCloudinary(req.files.image[0].buffer);
+      if (!imageResult) {
+        res.status(400);
+        return next(new Error('Image upload failed'));
+      }
+      categoryData.image = imageResult.secure_url;
+    }
+
+    // Handle background image upload
+    if (req.files?.backgroundImage?.[0]) {
+      const bgResult = await uploadSingleToCloudinary(req.files.backgroundImage[0].buffer);
+      if (!bgResult) {
+        res.status(400);
+        return next(new Error('Background image upload failed'));
+      }
+      categoryData.backgroundImage = bgResult.secure_url;
+    }
+
+    const category = await Category.create(categoryData);
 
     res.status(201).json({
       success: true,
@@ -77,40 +85,28 @@ export const createCategory = async (req, res, next) => {
 // @desc    Update Category
 // @route   PUT /api/categories/:id
 // @access  Private/Admin
-// export const updateCategory = async (req, res, next) => {
-//   try {
-//     const { name, description, parentCategory, sortOrder, isActive } = req.body;
-//     const image = req.file 
-//     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//       runValidators: true
-//     });
-
-//     if (!category) {
-//       res.status(404);
-//       return next(new Error('Category not found'));
-//     }
-
-//     res.status(200).json({ success: true, category });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 export const updateCategory = async (req, res, next) => {
   try {
     const updateData = { ...req.body };
 
-    if (req.file) {
-      const result = await uploadSingleToCloudinary(
-        req.file.buffer
-      );
-
-      if (!result) {
+    // Handle main image upload
+    if (req.files?.image?.[0]) {
+      const imageResult = await uploadSingleToCloudinary(req.files.image[0].buffer);
+      if (!imageResult) {
         res.status(400);
         return next(new Error('Image upload failed'));
       }
+      updateData.image = imageResult.secure_url;
+    }
 
-      updateData.image = result.secure_url;
+    // Handle background image upload
+    if (req.files?.backgroundImage?.[0]) {
+      const bgResult = await uploadSingleToCloudinary(req.files.backgroundImage[0].buffer);
+      if (!bgResult) {
+        res.status(400);
+        return next(new Error('Background image upload failed'));
+      }
+      updateData.backgroundImage = bgResult.secure_url;
     }
 
     const category = await Category.findByIdAndUpdate(

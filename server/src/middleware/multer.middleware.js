@@ -19,3 +19,19 @@ export const upload = multer({
     }
 });
 
+// Category-specific upload: accepts both 'image' and 'backgroundImage'
+export const categoryUpload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+        files: 2
+    },
+    fileFilter: (req, file, cb) => {
+        if (allowedFileTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type'), false);
+        }
+    }
+});
+

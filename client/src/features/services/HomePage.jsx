@@ -5,6 +5,7 @@ import {
   Search,
   MapPin,
   Star,
+  StarHalf,
   Shield,
   Clock,
   LucideTruckElectric,
@@ -414,51 +415,122 @@ const HomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {serviceList.map((service) => (
-              <Card
+              <div
                 key={service._id}
-                className="flex flex-col h-full justify-between gap-4 border-zinc-800/80 bg-zinc-900/20 hover:bg-zinc-900/40 transition-all"
-                style={{
-                  backgroundImage: service?.category?.backgroundImage?.length
-                    ? `url(${service.category.backgroundImage})` : 'none'
-                }}
+                className="relative flex flex-col justify-between h-full w-full max-w-[350px] overflow-hidden rounded-2xl border border-zinc-800/80 transition-all hover:border-indigo-500/30"
               >
-                <div className="flex flex-col gap-3">
-                  <div className="flex justify-between items-start gap-2">
-                    <span className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                      {service.category?.name || "Service"}
-                    </span>
-                    {service.isEmergency && (
-                      <span className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20 text-[9px] uppercase font-bold tracking-widest text-red-400">
-                        Emergency
-                      </span>
-                    )}
+                {/* Background Image */}
+                {service?.category?.backgroundImage && (
+                  <div className="absolute h-full w-full bg-green-500 inset-0 flex items-center justify-center">
+                    <img
+                      src={service.category.backgroundImage}
+                      alt={service.category?.name}
+                      className="h-full object-center overflow-hidden select-none pointer-events-none"
+                      draggable={false}
+                    />
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-100 hover:text-indigo-400 transition-colors">
-                    <Link to={`/services/${service._id}`}>{service.title}</Link>
-                  </h3>
-                  <p className="text-sm text-zinc-400 line-clamp-2">
-                    {service.description}
-                  </p>
-                </div>
+                )}
 
-                <div className="border-t border-zinc-800/80 pt-4 flex items-center justify-between mt-auto">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-zinc-500 font-medium">
-                      Starting from
-                    </span>
-                    <span className="text-lg font-extrabold text-indigo-400">
-                      ₹{service.price}
-                    </span>
+                {/* Optional Dark Overlay */}
+                <div className="absolute inset-0 backdrop-blur-[0.2px]" />
+
+                {/* Content */}
+                <div className="relative z-10 flex flex-col justify-between h-full p-6">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="glass !bg-white/10 p-1 rounded-md">
+                      <span className=" px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] uppercase font-bold tracking-wider text-zinc-200">
+                        {service.category?.name || "Service"}
+                      </span>
+                      </div>
+
+                      {service.isEmergency && (
+                        <div className="glass !bg-white/10 p-1 rounded-md">
+                        <span className="px-3 py-1 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-400 animate-pulse">
+                          Emergency
+                        </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <h3 className="text-lg font-bold text-zinc-900 ">
+                      <span className="w-auto block line-clamp-2">
+                        <Link
+                          to={`/services/${service._id}`}
+                          className=" glass !bg-white/10 p-1 rounded-md hover:text-indigo-400  transition-colors"
+                        >
+                          {service.title}
+                        </Link>
+                      </span>
+                    </h3>
+
+                    <p className="text-sm text-zinc-900 line-clamp-2 glass !bg-white/10 p-1 rounded-md">
+                      {service.description}
+                    </p>
                   </div>
-                  <Link to={`/services/${service._id}`}>
-                    <Button variant="outline" size="sm">
-                      Book Now
-                    </Button>
-                  </Link>
+                  
+
+                  <div className="border-t border-zinc-700/70 pt-4 flex items-center justify-between  glass !bg-zinc-400/10 p-1 rounded-md">
+                    <div className="flex flex-col">
+                      <span className="text-lg px-2 font-extrabold text-indigo-500">
+                        ₹{service.price}
+                      </span>
+                      <div className="flex items-center gap-2 rounded-full  border px-3 py-1 backdrop-blur-md">
+                        <div className="flex items-center">
+                          {Array.from({ length: 5 }, (_, index) => {
+                            const rating = service.provider?.rating || 0;
+
+                            if (rating >= index + 1) {
+                              // Full Star
+                              return (
+                                <Star
+                                  key={index}
+                                  size={14}
+                                  className="fill-amber-400 text-amber-400"
+                                />
+                              );
+                            }
+
+                            if (rating >= index + 0.5) {
+                              // Half Star
+                              return (
+                                <StarHalf
+                                  key={index}
+                                  size={14}
+                                  className="fill-amber-400 text-amber-400"
+                                />
+                              );
+                            }
+
+                            // Empty Star
+                            return (
+                              <Star
+                                key={index}
+                                size={14}
+                                className="text-zinc-500"
+                              />
+                            );
+                          })}
+                        </div>
+
+                        <span className="text-xs font-semibold text-shadow-rose-200">
+                          {service.provider?.rating
+                            ? service.provider.rating.toFixed(1)
+                            : "New"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link to={`/services/${service._id}`}>
+                      <Button className="p-1 text-[12px] bg-zinc-900 text-white hover:bg-indigo-500">
+                        Book Now
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}

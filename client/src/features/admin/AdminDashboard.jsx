@@ -55,6 +55,7 @@ const AdminDashboard = () => {
   const [categoryDescription, setCategoryDescription] = useState("");
   const [categoryIcon, setCategoryIcon] = useState("🔧");
   const [categoryImage, setCategoryImage] = useState(null);
+  const [categoryBackgroundImage, setCategoryBackgroundImage] = useState(null);
   const [categorySortOrder, setCategorySortOrder] = useState(0);
   const [categoryIsActive, setCategoryIsActive] = useState(true);
   const [savingCategory, setSavingCategory] = useState(false);
@@ -182,6 +183,7 @@ const AdminDashboard = () => {
   // Category Management Handlers
   const openCategoryModal = (cat = null) => {
     setCategoryImage(null);
+    setCategoryBackgroundImage(null);
     if (cat) {
       setEditingCategory(cat);
       setCategoryName(cat.name);
@@ -244,6 +246,10 @@ const AdminDashboard = () => {
 
     if (categoryImage) {
       formData.append("image", categoryImage);
+    }
+
+    if (categoryBackgroundImage) {
+      formData.append("backgroundImage", categoryBackgroundImage);
     }
 
     try {
@@ -785,9 +791,10 @@ const AdminDashboard = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-zinc-900 border-b border-zinc-800 text-[10px] uppercase font-bold text-zinc-500 tracking-wider">
-                    <th className="p-4 w-12 text-center">Icon</th>
+                    <th className="p-4 w-16 text-center">Image</th>
                     <th className="p-4">Name</th>
                     <th className="p-4">Slug</th>
+                    <th className="p-4 w-20 text-center">BG Image</th>
                     <th className="p-4 text-center">Sort Order</th>
                     <th className="p-4 text-center">Status</th>
                     <th className="p-4 text-right">Actions</th>
@@ -799,8 +806,16 @@ const AdminDashboard = () => {
                       key={cat._id}
                       className="hover:bg-zinc-900/40 transition-colors"
                     >
-                      <td className="p-4 text-center text-xl">
-                        {cat.icon || "🔧"}
+                      <td className="p-4 text-center">
+                        {cat.image ? (
+                          <img
+                            src={cat.image}
+                            alt={cat.name}
+                            className="w-10 h-10 rounded-lg object-cover border border-zinc-700 mx-auto"
+                          />
+                        ) : (
+                          <span className="text-xl">{cat.icon || "🔧"}</span>
+                        )}
                       </td>
                       <td className="p-4">
                         <div className="font-bold text-zinc-200">
@@ -814,6 +829,17 @@ const AdminDashboard = () => {
                       </td>
                       <td className="p-4 text-zinc-400 font-mono text-[10px]">
                         {cat.slug}
+                      </td>
+                      <td className="p-4 text-center">
+                        {cat.backgroundImage ? (
+                          <img
+                            src={cat.backgroundImage}
+                            alt="BG"
+                            className="w-16 h-10 rounded-lg object-cover border border-zinc-700 mx-auto"
+                          />
+                        ) : (
+                          <span className="text-[10px] text-zinc-600">None</span>
+                        )}
                       </td>
                       <td className="p-4 text-center font-semibold text-zinc-300">
                         {cat.sortOrder}
@@ -899,16 +925,44 @@ const AdminDashboard = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-zinc-400">
-                        Image
-                      </label>
-                      <input
-                        type="file"
-                        className="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 text-center focus:outline-none focus:border-indigo-500 transition-all"
-                        onChange={(e) => setCategoryImage(e.target.files[0])}
-                      />
+                  <div className="flex flex-col gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-zinc-400">
+                          Category Image
+                        </label>
+                        {editingCategory?.image && !categoryImage && (
+                          <img
+                            src={editingCategory.image}
+                            alt="Current"
+                            className="w-14 h-14 rounded-lg object-cover border border-zinc-700"
+                          />
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-indigo-500 transition-all file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-indigo-950 file:text-indigo-300"
+                          onChange={(e) => setCategoryImage(e.target.files[0])}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-zinc-400">
+                          Background Image
+                        </label>
+                        {editingCategory?.backgroundImage && !categoryBackgroundImage && (
+                          <img
+                            src={editingCategory.backgroundImage}
+                            alt="Current BG"
+                            className="w-20 h-14 rounded-lg object-cover border border-zinc-700"
+                          />
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-indigo-500 transition-all file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-indigo-950 file:text-indigo-300"
+                          onChange={(e) => setCategoryBackgroundImage(e.target.files[0])}
+                        />
+                      </div>
                     </div>
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs font-semibold text-zinc-400">

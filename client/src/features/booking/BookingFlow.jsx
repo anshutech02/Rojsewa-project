@@ -77,12 +77,14 @@ const BookingFlow = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
+                    className="text-white [&::-webkit-calendar-picker-indicator]:invert"
                     label="Scheduled Date"
                     type="date"
                     error={errors.date}
                     {...register('date', { required: 'Date is required' })}
                   />
                   <Input
+                    className="text-white [&::-webkit-calendar-picker-indicator]:invert"
                     label="Scheduled Time"
                     type="time"
                     error={errors.time}

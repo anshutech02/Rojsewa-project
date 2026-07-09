@@ -75,7 +75,7 @@ const VerifyEmailPage = () => {
                 placeholder="123456"
                 maxLength={6}
                 error={errors.otp}
-                {...register('otp', { 
+                {...register('otp', {
                   required: 'Verification code is required',
                   minLength: { value: 6, message: 'Code must be 6 digits' },
                   maxLength: { value: 6, message: 'Code must be 6 digits' }

@@ -7,17 +7,22 @@ import {
   deleteCategory,
 } from '../controllers/category.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
-import { upload } from '../middleware/multer.middleware.js';
+import { categoryUpload } from '../middleware/multer.middleware.js';
 
 const router = express.Router();
 
+const categoryFields = categoryUpload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'backgroundImage', maxCount: 1 },
+]);
+
 router.route('/')
   .get(getCategories)
-  .post(protect, authorize('admin'), upload.single('image'), createCategory);
+  .post(protect, authorize('admin'), categoryFields, createCategory);
 
 router.route('/:id')
   .get(getCategoryById)
-  .put(protect, authorize('admin'), upload.single('image'), updateCategory)
+  .put(protect, authorize('admin'), categoryFields, updateCategory)
   .delete(protect, authorize('admin'), deleteCategory);
 
 export default router;
