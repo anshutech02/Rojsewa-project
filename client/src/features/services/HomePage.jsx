@@ -396,9 +396,9 @@ const HomePage = () => {
       {/* Services Section */}
       <section
         id="featured-services"
-        className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col gap-8"
+        className="max-w-8xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col items-center gap-8"
       >
-        <h2 className="text-2xl font-bold tracking-tight">Featured Services</h2>
+        <h2 className="text-2xl font-bold tracking-tight gradient-text">Featured Services</h2>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -415,11 +415,11 @@ const HomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {serviceList.map((service) => (
               <div
                 key={service._id}
-                className="relative flex flex-col justify-between h-full w-full max-w-[350px] overflow-hidden rounded-2xl border border-zinc-800/80 transition-all hover:border-indigo-500/30"
+                className="relative flex flex-col shadow-xl justify-between h-full w-full max-w-[350px] overflow-hidden rounded-2xl border border-zinc-800/80 transition-all hover:border-indigo-500/30"
               >
                 {/* Background Image */}
                 {service?.category?.backgroundImage && (
@@ -447,7 +447,7 @@ const HomePage = () => {
                       </div>
 
                       {service.isEmergency && (
-                        <div className="glass !bg-white/10 p-1 rounded-md">
+                        <div className="glass !bg-white/10 p-1 rounded-full shadow-lg">
                         <span className="px-3 py-1 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-400 animate-pulse">
                           Emergency
                         </span>
@@ -515,7 +515,7 @@ const HomePage = () => {
                           })}
                         </div>
 
-                        <span className="text-xs font-semibold text-shadow-rose-200">
+                        <span className="text-xs font-semibold text-zinc-800">
                           {service.provider?.rating
                             ? service.provider.rating.toFixed(1)
                             : "New"}

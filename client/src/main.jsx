@@ -5,6 +5,9 @@ import { Toaster } from "react-hot-toast";
 import App from "./App.jsx";
 import store from "./store/store.js";
 import "./styles/index.css";
+import {registerSW} from 'virtual:pwa-register';
+
+registerSW()
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
