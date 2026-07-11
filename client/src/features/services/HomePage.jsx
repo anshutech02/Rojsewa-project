@@ -23,7 +23,7 @@ const HomePage = () => {
   const { serviceList, categories, loading } = useSelector(
     (state) => state.services,
   );
-  console.log("Service List:", serviceList);
+ 
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");

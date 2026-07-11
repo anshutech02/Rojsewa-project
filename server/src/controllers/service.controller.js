@@ -29,7 +29,7 @@ export const getServices = async (req, res, next) => {
     }
 
     // Find services
-    console.log('Querying services with:', query);
+    
     let services = await Service.find(query)
       .populate({
         path: 'provider',
@@ -96,8 +96,7 @@ export const createService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Only registered providers can create services'));
     }
-    console.log('Provider:', provider);
-    console.log('Provider user:', provider.user);
+    
     if(provider.user.isVerified === false) {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to create services.'));
