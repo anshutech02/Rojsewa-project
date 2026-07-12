@@ -236,14 +236,14 @@ Thank you!`;
   };
 
   const openWhatsApp = (booking) => {
-  const phone = booking.customer?.phone?.replace(/\D/g, "");
-  const message = getWhatsAppMessage(booking);
+    const phone = booking.customer?.phone?.replace(/\D/g, "");
+    const message = getWhatsAppMessage(booking);
 
-  window.open(
-    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-    "_blank"
-  );
-};
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      "_blank",
+    );
+  };
 
   return (
     <DashboardLayout
@@ -264,24 +264,24 @@ Thank you!`;
             Verify Now
           </Link> */}
           <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
-                  onClick={async () => {
-                    try {
-                      await api.post("/auth/send-verification-otp");
-                      toast.success("Verification code sent.");
-                      navigate("/verify-email");
-                    } catch (err) {
-                      toast.error(
-                        err.response?.data?.error ||
-                          "Failed to send verification code.",
-                      );
-                    }
-                  }}
-                >
-                  Verify Email
-                </Button>
+            variant="outline"
+            size="sm"
+            className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
+            onClick={async () => {
+              try {
+                await api.post("/auth/send-verification-otp");
+                toast.success("Verification code sent.");
+                navigate("/verify-email");
+              } catch (err) {
+                toast.error(
+                  err.response?.data?.error ||
+                    "Failed to send verification code.",
+                );
+              }
+            }}
+          >
+            Verify Email
+          </Button>
         </div>
       )}
       {/* Top metrics bar */}
@@ -474,12 +474,11 @@ Thank you!`;
                   {booking.status === "accepted" && (
                     <div className="flex gap-2 justify-end">
                       <Button
-                        variant="outline"
                         size="sm"
-                        className="gap-1.5 border-green-500 text-green-400 hover:bg-green-500/10"
+                        className="gap-1.5 bg-[#25D366] text-white hover:bg-[#20ba5a] border-none"
                         onClick={() => openWhatsApp(booking)}
                       >
-                        <FaWhatsapp size={16} />
+                        <FaWhatsapp size={16} color="#FFFFFF" />
                         WhatsApp
                       </Button>
                       <Button

@@ -8,6 +8,8 @@ import {
   StarHalf,
   Shield,
   Clock,
+  CheckCircle,
+  BadgeCheck,
   LucideTruckElectric,
 } from "lucide-react";
 import Card from "../../components/ui/Card.jsx";
@@ -23,7 +25,6 @@ const HomePage = () => {
   const { serviceList, categories, loading } = useSelector(
     (state) => state.services,
   );
- 
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -142,6 +143,7 @@ const HomePage = () => {
   const visibleCategories = showAllCategories
     ? categories
     : categories.slice(0, 8);
+  console.log(serviceList, "serviceList");
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50">
@@ -398,7 +400,9 @@ const HomePage = () => {
         id="featured-services"
         className="max-w-8xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col items-center gap-8"
       >
-        <h2 className="text-2xl font-bold tracking-tight gradient-text">Featured Services</h2>
+        <h2 className="text-2xl font-bold tracking-tight gradient-text">
+          Featured Services
+        </h2>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -429,6 +433,7 @@ const HomePage = () => {
                       alt={service.category?.name}
                       className="h-full object-center overflow-hidden select-none pointer-events-none"
                       draggable={false}
+                      幕
                     />
                   </div>
                 )}
@@ -440,50 +445,72 @@ const HomePage = () => {
                 <div className="relative z-10 flex flex-col justify-between h-full p-6">
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between items-start gap-2">
-                      <div className="glass !bg-white/10 p-1 rounded-md">
-                      <span className=" px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] uppercase font-bold tracking-wider text-zinc-200">
-                        {service.category?.name || "Service"}
-                      </span>
+                      <div className="flex items-center gap-2 glass !bg-white/10 p-1 rounded-md">
+                        <span className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] uppercase font-bold tracking-wider text-zinc-200">
+                          {service.category?.name || "Service"}
+                        </span>
+                        {/* Verification Tag */}
+                        {service?.provider?.isApproved && (
+                          <span
+                            className="flex items-center justify-center overflow-hidden rounded-full"
+                            title="Verified Provider"
+                          >
+                            <img
+                              src="/verified.gif"
+                              alt="Verified Provider"
+                              className="w-5 h-5"
+                            />
+                          </span>
+                        )}
                       </div>
 
                       {service.isEmergency && (
                         <div className="glass !bg-white/10 p-1 rounded-full shadow-lg">
-                        <span className="px-3 py-1 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-400 animate-pulse">
-                          Emergency
-                        </span>
+                          <span className="px-3 py-1 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-400 animate-pulse">
+                            Emergency
+                          </span>
                         </div>
                       )}
                     </div>
 
-                    <h3 className="text-lg font-bold text-zinc-900 ">
-                      <span className="w-auto block line-clamp-2">
-                        <Link
-                          to={`/services/${service._id}`}
-                          className=" glass !bg-white/10 p-1 rounded-md hover:text-indigo-400  transition-colors"
-                        >
-                          {service.title}
-                        </Link>
-                      </span>
+                    <h3 className="text-base sm:text-lg glass rounded-md !bg-white/30 p-1 font-bold text-zinc-900 leading-snug">
+                      <Link
+                        to={`/services/${service._id}`}
+                        className="block w-full rounded-md p-1 transition-colors hover:text-indigo-400 break-words"
+                      >
+                        <span className="line-clamp-2">{service.title}</span>
+                      </Link>
                     </h3>
+                    <div className="flex items-center gap-1.5 text-sm">
+                      <span className="flex items-center gap-1 text-zinc-800/80 text-[12px] rounded-xl overflow-hidden font-medium">
+                        <img
+                          src="/location.gif"
+                          alt="Location"
+                          className="w-5 h-5 object-contain flex-shrink-0"
+                        />
+                        <span className="line-clamp-1 text-[12px] font-bold text-taupe-950 glass px-2 py-1 !bg-white/40 rounded-md">
+                          {service?.provider?.serviceArea?.city ||
+                            "Location not available"}
+                        </span>
+                      </span>
+                    </div>
 
-                    <p className="text-sm text-zinc-900 line-clamp-2 glass !bg-white/10 p-1 rounded-md">
+                    <p className="text-sm text-zinc-900 line-clamp-2 border-2 border-amber-50 backdrop-blur-md p-1 rounded-md">
                       {service.description}
                     </p>
                   </div>
-                  
 
-                  <div className="border-t border-zinc-700/70 pt-4 flex items-center justify-between  glass !bg-zinc-400/10 p-1 rounded-md">
+                  <div className="border-t border-zinc-700/70 mt-2 pt-4 flex items-center justify-between glass !bg-zinc-400/20 p-1 rounded-md">
                     <div className="flex flex-col">
                       <span className="text-lg px-2 font-extrabold text-indigo-500">
                         ₹{service.price}
                       </span>
-                      <div className="flex items-center gap-2 rounded-full  border px-3 py-1 backdrop-blur-md">
+                      <div className="flex items-center gap-2 rounded-full border px-3 py-1 backdrop-blur-md">
                         <div className="flex items-center">
                           {Array.from({ length: 5 }, (_, index) => {
                             const rating = service.provider?.rating || 0;
 
                             if (rating >= index + 1) {
-                              // Full Star
                               return (
                                 <Star
                                   key={index}
@@ -494,7 +521,6 @@ const HomePage = () => {
                             }
 
                             if (rating >= index + 0.5) {
-                              // Half Star
                               return (
                                 <StarHalf
                                   key={index}
@@ -504,7 +530,6 @@ const HomePage = () => {
                               );
                             }
 
-                            // Empty Star
                             return (
                               <Star
                                 key={index}
