@@ -34,11 +34,32 @@ export const logoutUser = createAsyncThunk('auth/logout', async (_, { rejectWith
 });
 
 export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await api.get('/auth/me');
-    return data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.error || 'Failed to load profile');
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY = 3000; // 3 seconds between retries
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const { data } = await api.get('/auth/me');
+      return data;
+    } catch (error) {
+      const isNetworkError = !error.response && (error.code === 'ECONNABORTED' || error.message === 'Network Error');
+      const isServerWaking = error.response?.status >= 500;
+
+      // Retry on network errors or 5xx (Render waking up), unless last attempt
+      if ((isNetworkError || isServerWaking) && attempt < MAX_RETRIES) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAY * attempt));
+        continue;
+      }
+
+      return rejectWithValue({
+        status: error.response?.status,
+        isNetworkError: isNetworkError,
+        message:
+          error.response?.data?.error ||
+          (isNetworkError ? 'Server is starting up, please wait...' : error.message) ||
+          'Failed to load profile',
+      });
+    }
   }
 });
 
@@ -131,10 +152,24 @@ const authSlice = createSlice({
       .addCase(getMe.rejected, (state, action) => {
         state.loading = false;
         state.initialLoading = false;
-        state.user = null;
-        state.provider = null;
-        state.isAuthenticated = false;
-        state.error = action.payload;
+
+        const status = action.payload?.status;
+        const isNetworkError = action.payload?.isNetworkError;
+
+        if (status === 401) {
+          // Definitive auth failure — clear everything
+          state.user = null;
+          state.provider = null;
+          state.isAuthenticated = false;
+          localStorage.removeItem("accessToken");
+        } else if (isNetworkError) {
+          // Network error (Render sleeping) — keep user authenticated
+          // so they don't get redirected to login. The token is still valid.
+          // isAuthenticated stays true, user data may be null until next success.
+        }
+
+        state.error =
+          action.payload?.message || action.error?.message || "Failed to load profile";
       })
       // Update Profile
       .addCase(updateProfile.pending, (state) => {

@@ -21,7 +21,7 @@ export const sendTokenResponse = (user, statusCode, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days matching refresh token
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' required for cross-site cookies (Vercel → Render)
   };
 
   res.cookie('refreshToken', refreshToken, cookieOptions);

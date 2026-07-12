@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMe } from './store/authSlice.js';
-import HomePage from './features/services/HomePage.jsx';
-import LoginPage from './features/auth/LoginPage.jsx';
-import RegisterPage from './features/auth/RegisterPage.jsx';
-import ForgotPasswordPage from './features/auth/ForgotPasswordPage.jsx';
-import ResetPasswordPage from './features/auth/ResetPasswordPage.jsx';
-import VerifyEmailPage from './features/auth/VerifyEmailPage.jsx';
-import ProfilePage from './features/auth/ProfilePage.jsx';
-import ServiceDetailPage from './features/services/ServiceDetailPage.jsx';
-import BookingFlow from './features/booking/BookingFlow.jsx';
-import BookingHistory from './features/booking/BookingHistory.jsx';
-import BookingDetailPage from './features/booking/BookingDetailPage.jsx';
-import ProviderDashboard from './features/provider/ProviderDashboard.jsx';
-import AdminDashboard from './features/admin/AdminDashboard.jsx';
-import ProtectedRoute from './components/shared/ProtectedRoute.jsx';
-import Spinner from './components/ui/Spinner.jsx';
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMe } from "./store/authSlice.js";
+import HomePage from "./features/services/HomePage.jsx";
+import LoginPage from "./features/auth/LoginPage.jsx";
+import RegisterPage from "./features/auth/RegisterPage.jsx";
+import ForgotPasswordPage from "./features/auth/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./features/auth/ResetPasswordPage.jsx";
+import VerifyEmailPage from "./features/auth/VerifyEmailPage.jsx";
+import ProfilePage from "./features/auth/ProfilePage.jsx";
+import ServiceDetailPage from "./features/services/ServiceDetailPage.jsx";
+import BookingFlow from "./features/booking/BookingFlow.jsx";
+import BookingHistory from "./features/booking/BookingHistory.jsx";
+import BookingDetailPage from "./features/booking/BookingDetailPage.jsx";
+import ProviderDashboard from "./features/provider/ProviderDashboard.jsx";
+import AdminDashboard from "./features/admin/AdminDashboard.jsx";
+import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
+import Spinner from "./components/ui/Spinner.jsx";
 
 const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (localStorage.getItem("accessToken")) {
       dispatch(getMe());
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -59,7 +59,7 @@ const App = () => {
         <Route
           path="/bookings/new"
           element={
-            <ProtectedRoute allowedRoles={['customer']}>
+            <ProtectedRoute allowedRoles={["customer"]}>
               <BookingFlow />
             </ProtectedRoute>
           }
@@ -85,7 +85,7 @@ const App = () => {
         <Route
           path="/provider"
           element={
-            <ProtectedRoute allowedRoles={['provider']}>
+            <ProtectedRoute allowedRoles={["provider"]}>
               <ProviderDashboard />
             </ProtectedRoute>
           }
@@ -93,7 +93,7 @@ const App = () => {
         <Route
           path="/provider/services"
           element={
-            <ProtectedRoute allowedRoles={['provider']}>
+            <ProtectedRoute allowedRoles={["provider"]}>
               <ProviderDashboard />
             </ProtectedRoute>
           }
@@ -103,7 +103,7 @@ const App = () => {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute allowedRoles={['admin']}>
+            <ProtectedRoute allowedRoles={["admin"]}>
               <AdminDashboard />
             </ProtectedRoute>
           }

@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'https://rojsewa.onrender.com/api',
-  withCredentials: true
+  withCredentials: true,
+  timeout: 60000, // 60s timeout to handle Render cold starts (~30-50s)
 });
 
 // Request Interceptor: Attach Access Token
@@ -17,24 +18,82 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Auto Refresh Token
+// --- Token refresh queue ---
+// Prevents multiple concurrent 401s from each firing their own refresh request.
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Response Interceptor: Auto Refresh Token + Retry on network errors
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && error.response.data?.code === 'TOKEN_EXPIRED' && !originalRequest._retry) {
+
+    // --- Retry once on network/timeout errors (Render cold-start) ---
+    if (
+      !error.response &&
+      !originalRequest._networkRetry &&
+      (error.code === 'ECONNABORTED' || error.message === 'Network Error')
+    ) {
+      originalRequest._networkRetry = true;
+      // Wait 3 seconds then retry — gives Render time to spin up
+      await new Promise((r) => setTimeout(r, 3000));
+      return api(originalRequest);
+    }
+
+    // --- Handle 401 TOKEN_EXPIRED with refresh ---
+    if (
+      error.response?.status === 401 &&
+      error.response.data?.code === 'TOKEN_EXPIRED' &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
+
+      // If a refresh is already in-flight, queue this request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        });
+      }
+
+      isRefreshing = true;
+
       try {
-        const { data } = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
-        localStorage.setItem('accessToken', data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        const { data } = await axios.post(
+          'https://rojsewa.onrender.com/api/auth/refresh',
+          {},
+          { withCredentials: true, timeout: 60000 }
+        );
+        const newToken = data.accessToken;
+        localStorage.setItem('accessToken', newToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        processQueue(null, newToken);
         return api(originalRequest);
       } catch (refreshError) {
+        processQueue(refreshError, null);
+        // Refresh failed — token is truly invalid, clear auth
         localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
+
     return Promise.reject(error);
   }
 );
