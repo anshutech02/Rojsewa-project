@@ -23,6 +23,8 @@ const ServiceForm = ({ onSubmit, initialData, categories, onCancel, loading }) =
       tags: '',
       images: '',
       isEmergency: false,
+      city: '',
+      pincode: '',
     }
   });
 
@@ -38,6 +40,8 @@ const ServiceForm = ({ onSubmit, initialData, categories, onCancel, loading }) =
       setValue('isEmergency', initialData.isEmergency || false);
       setValue('tags', initialData.tags ? initialData.tags.join(', ') : '');
       setValue('images', initialData.images ? initialData.images.join(', ') : '');
+      setValue('city', initialData.serviceArea?.city || '');
+      setValue('pincode', initialData.serviceArea?.pincode || '');
     }
   }, [initialData, setValue]);
 
@@ -50,7 +54,14 @@ const ServiceForm = ({ onSubmit, initialData, categories, onCancel, loading }) =
       duration: Number(data.duration),
       tags: data.tags ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       images: data.images ? data.images.split(',').map(i => i.trim()).filter(Boolean) : [],
+      serviceArea: {
+        city: data.city || '',
+        radius: 10,
+        pincode: data.pincode || '',
+      }
     };
+    delete formattedData.city;
+    delete formattedData.pincode;
     onSubmit(formattedData);
   };
 
@@ -70,6 +81,30 @@ const ServiceForm = ({ onSubmit, initialData, categories, onCancel, loading }) =
           maxLength: { value: 100, message: 'Max 100 characters' }
         })}
       />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input
+          label="Service City"
+          placeholder="e.g. Mumbai"
+          error={errors.city}
+          {...register('city', { 
+            required: 'Service city is required',
+          })}
+        />
+
+        <Input
+          label="Service Pincode"
+          placeholder="e.g. 400001"
+          error={errors.pincode}
+          {...register('pincode', { 
+            required: 'Service pincode is required',
+            pattern: {
+              value: /^[1-9][0-9]{5}$/,
+              message: 'Invalid pincode format (6 digits)'
+            }
+          })}
+        />
+      </div>
 
       <div className="flex flex-col gap-1.5 w-full">
         <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">

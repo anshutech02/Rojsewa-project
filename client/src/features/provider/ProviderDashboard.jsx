@@ -471,52 +471,48 @@ Thank you!`;
                     </div>
                   )}
 
-                  {booking.status === "accepted" && (
-                    <div className="flex gap-2 justify-end">
+                  <div className="flex items-center justify-end gap-2.5">
+                    {/* WhatsApp Action (Available for both accepted and in-progress statuses) */}
+                    {(booking.status === "accepted" ||
+                      booking.status === "in_progress") && (
                       <Button
                         size="sm"
-                        className="gap-1.5 bg-[#25D366] text-white hover:bg-[#20ba5a] border-none"
+                        className="flex items-center gap-2 border-none !bg-[#25D366] text-white hover:!bg-[#14bd55] shadow-sm shadow-emerald-100/50 transition-all duration-200 active:scale-[0.98]"
                         onClick={() => openWhatsApp(booking)}
                       >
-                        <FaWhatsapp size={16} color="#FFFFFF" />
-                        WhatsApp
+                        <FaWhatsapp size={16} className="fill-current" />
+                        <span className="font-medium">WhatsApp</span>
                       </Button>
+                    )}
+
+                    {/* Status Progression Actions */}
+                    {booking.status === "accepted" && (
                       <Button
                         variant="primary"
                         size="sm"
-                        className="gap-1.5"
+                        className="flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]"
                         onClick={() =>
                           handleStatusUpdate(booking._id, "in_progress")
                         }
                       >
-                        <Play size={14} /> Start Service
+                        <Play size={14} className="fill-current" />
+                        <span className="font-medium">Start Service</span>
                       </Button>
-                    </div>
-                  )}
+                    )}
 
-                  {booking.status === "in_progress" && (
-                    <div className="flex gap-2 justify-end">
+                    {booking.status === "in_progress" && (
                       <Button
-                        variant="outline"
                         size="sm"
-                        className="gap-1.5 border-green-500 text-green-400 hover:bg-green-500/10"
-                        onClick={() => openWhatsApp(booking)}
-                      >
-                        <FaWhatsapp size={16} />
-                        WhatsApp
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="gap-1.5 bg-emerald-600 hover:bg-emerald-500"
+                        className="flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm shadow-emerald-100/50 transition-all active:scale-[0.98]"
                         onClick={() =>
                           handleStatusUpdate(booking._id, "completed")
                         }
                       >
-                        <Check size={14} /> Mark Completed
+                        <Check size={14} strokeWidth={2.5} />
+                        <span className="font-medium">Mark Completed</span>
                       </Button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </Card>
               ))}
             </div>
@@ -534,7 +530,6 @@ Thank you!`;
               size="sm"
               className="gap-1.5 shadow-indigo-600/10"
               onClick={handleOpenCreateModal}
-              disabled={!provider?.isApproved}
             >
               <Plus size={14} />
               Create Service

@@ -284,14 +284,16 @@ const BookingDetailPage = () => {
           </div>
         </div>
       </main>
-      {status === "accepted" && provider?.user?.phone && (
-        <WhatsAppOrder
-          phoneNumber={provider.user.phone}
-          customerName={user?.name}
-          serviceName={service?.title}
-          bookingId={currentBooking._id}
-        />
-      )}
+      {(status === "accepted" || status === "in_progress") &&
+  provider?.user?.phone && (
+    <WhatsAppOrder
+      phoneNumber={provider.user.phone}
+      customerName={user?.name}
+      serviceName={service?.title}
+      bookingId={currentBooking._id}
+      status={status}
+    />
+)}
       <Footer />
     </div>
   );

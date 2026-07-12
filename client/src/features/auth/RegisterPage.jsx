@@ -26,10 +26,6 @@ const RegisterPage = () => {
       // Format provider details if applicable
       skills: data.skills ? data.skills.split(',').map(s => s.trim()) : [],
       experience: Number(data.experience) || 0,
-      serviceArea: {
-        city: data.city || '',
-        radius: Number(data.radius) || 10,
-      }
     };
 
     dispatch(registerUser(signupData))
@@ -125,21 +121,13 @@ const RegisterPage = () => {
                     {...register('skills', { required: 'Skills are required for providers' })}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Years Experience"
-                      type="number"
-                      placeholder="e.g. 5"
-                      error={errors.experience}
-                      {...register('experience', { required: 'Experience is required' })}
-                    />
-                    <Input
-                      label="Service City"
-                      placeholder="e.g. Mumbai"
-                      error={errors.city}
-                      {...register('city', { required: 'City is required' })}
-                    />
-                  </div>
+                  <Input
+                    label="Years Experience"
+                    type="number"
+                    placeholder="e.g. 5"
+                    error={errors.experience}
+                    {...register('experience', { required: 'Experience is required' })}
+                  />
                 </div>
               )}
 

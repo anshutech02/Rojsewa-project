@@ -31,14 +31,7 @@ const providerSchema = new mongoose.Schema({
       default: false,
     },
   }],
-  serviceArea: {
-    city: { type: String, default: '' },
-    radius: { type: Number, default: 10 },
-    coordinates: {
-      lat: Number,
-      lng: Number,
-    },
-  },
+  
   availability: {
     days: {
       type: [String],

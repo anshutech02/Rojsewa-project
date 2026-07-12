@@ -1,46 +1,93 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
 
-const WhatsAppOrder = ({ phoneNumber, customerName, serviceName, bookingId }) => {
+const WhatsAppOrder = ({
+  phoneNumber,
+  customerName,
+  serviceName,
+  bookingId,
+  status,
+}) => {
   if (!phoneNumber) return null;
+
+  // Remove spaces, +, -, ()
+  let cleanedPhone = phoneNumber.replace(/\D/g, "");
+
+  // Automatically add India's country code if missing
+  if (cleanedPhone.length === 10) {
+    cleanedPhone = `91${cleanedPhone}`;
+  }
+
+  const statusMessage = {
+    accepted: `My booking has been *accepted* ✅.`,
+    in_progress: `My booking is currently *in progress* 🚀.`,
+  };
 
   const message = `Hello! 👋
 
-I'm ${customerName}.
+I'm *${customerName}*.
 
-My booking has been accepted.
+${statusMessage[status] || ""}
 
 📌 Booking ID: ${bookingId}
 🛠 Service: ${serviceName}
 
-I'm contacting you regarding my booking.`;
+I'm contacting you regarding my booking.
 
-  const whatsappURL = `https://wa.me/${phoneNumber.replace(
-    /\D/g,
-    ""
-  )}?text=${encodeURIComponent(message)}`;
+Thank you 😊`;
+
+  const whatsappURL = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(
+    message,
+  )}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <motion.div
+      initial={{ opacity: 0, y: 60 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="fixed bottom-6 right-6 z-50 group"
+    >
+      {/* Tooltip */}
+      <div
+        className="
+          absolute right-16 top-1/2 -translate-y-1/2
+          whitespace-nowrap rounded-lg
+          bg-zinc-900 px-3 py-2 text-sm
+          text-white shadow-lg
+          opacity-0 group-hover:opacity-100
+          transition-all duration-300
+          pointer-events-none
+        "
+      >
+        Chat with Provider
+      </div>
+
       <motion.a
         href={whatsappURL}
         target="_blank"
         rel="noopener noreferrer"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 120 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className="relative flex items-center justify-center
-        w-14 h-14 rounded-full bg-[#25D366]
-        text-white shadow-2xl"
+        whileHover={{
+          scale: 1.08,
+          rotate: 5,
+        }}
+        whileTap={{ scale: 0.92 }}
+        aria-label="Contact provider on WhatsApp"
+        className="
+          relative flex h-16 w-16 items-center justify-center
+          rounded-full bg-[#25D366]
+          text-white shadow-2xl
+          overflow-hidden
+        "
       >
-        <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-40"></span>
+        {/* Ripple */}
+        <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-30"></span>
 
-        <FaWhatsapp className="relative z-10 text-3xl" />
+        {/* Glow */}
+        <span className="absolute inset-0 rounded-full bg-green-500 blur-xl opacity-30"></span>
+
+        <FaWhatsapp className="relative z-10 text-4xl" />
       </motion.a>
-    </div>
+    </motion.div>
   );
 };
 

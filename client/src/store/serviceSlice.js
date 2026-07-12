@@ -5,7 +5,7 @@ export const fetchServices = createAsyncThunk(
   'services/fetchServices',
   async (queryParams = {}, { rejectWithValue }) => {
     try {
-      const { search, category, minPrice, maxPrice, rating, isEmergency, city } = queryParams;
+      const { search, category, minPrice, maxPrice, rating, isEmergency, city, pincode } = queryParams;
       const params = new URLSearchParams();
       if (search) params.append('search', search);
       if (category) params.append('category', category);
@@ -14,6 +14,7 @@ export const fetchServices = createAsyncThunk(
       if (rating) params.append('rating', rating);
       if (isEmergency) params.append('isEmergency', isEmergency);
       if (city) params.append('city', city);
+      if (pincode) params.append('pincode', pincode);
 
       const { data } = await api.get(`/services?${params.toString()}`);
       return data.services;

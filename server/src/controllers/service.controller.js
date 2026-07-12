@@ -6,9 +6,13 @@ import Provider from '../models/Provider.js';
 // @access  Public
 export const getServices = async (req, res, next) => {
   try {
-    const { search, category, minPrice, maxPrice, rating, isEmergency, city } = req.query;
+    const { search, category, minPrice, maxPrice, rating, isEmergency, city, pincode } = req.query;
 
     const query = { isActive: true };
+
+    if (pincode) {
+      query['serviceArea.pincode'] = pincode;
+    }
 
     if (category) {
       query.category = category;
@@ -49,7 +53,7 @@ export const getServices = async (req, res, next) => {
           return false;
         }
 
-        if (city && service.provider.serviceArea?.city?.toLowerCase() !== city.toLowerCase()) {
+        if (city && service.serviceArea?.city?.toLowerCase() !== city.toLowerCase()) {
           return false;
         }
 
@@ -101,12 +105,12 @@ export const createService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to create services.'));
     }
-    if (!provider.isApproved) {
-      res.status(403);
-      return next(new Error('Your provider account is pending approval'));
-    }
+    // if (!provider.isApproved) {
+    //   res.status(403);
+    //   return next(new Error('Your provider account is pending approval'));
+    // }
 
-    const { category, title, description, price, priceType, duration, images, tags, isEmergency } = req.body;
+    const { category, title, description, price, priceType, duration, images, tags, isEmergency, serviceArea } = req.body;
 
     const service = await Service.create({
       provider: provider._id,
@@ -119,6 +123,7 @@ export const createService = async (req, res, next) => {
       images: images || [],
       tags: tags || [],
       isEmergency: isEmergency || false,
+      serviceArea: serviceArea || { city: '', radius: 10, pincode: '' },
     });
 
     res.status(201).json({ success: true, service });
@@ -141,10 +146,10 @@ export const updateService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to update services.'));
     }
-    if (!provider.isApproved) {
-      res.status(403);
-      return next(new Error('Your provider account is pending approval'));
-    }
+    // if (!provider.isApproved) {
+    //   res.status(403);
+    //   return next(new Error('Your provider account is pending approval'));
+    // }
 
     let service = await Service.findById(req.params.id);
     if (!service) {

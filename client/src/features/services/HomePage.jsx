@@ -29,12 +29,14 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [cityFilter, setCityFilter] = useState("");
+  const [pincodeFilter, setPincodeFilter] = useState("");
   const [isSearchSticky, setIsSearchSticky] = useState(false);
 
   // References for GSAP to target elements directly without triggering DOM thrashing
   const searchBarRef = useRef(null);
   const searchInputRef = useRef(null);
   const cityInputRef = useRef(null);
+  const pincodeInputRef = useRef(null);
   const actionButtonRef = useRef(null);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const HomePage = () => {
           paddingBottom: "0.25rem",
           paddingLeft: "0.75rem",
           paddingRight: "0.75rem",
-          maxWidth: "640px",
+          maxWidth: "720px",
           height: "44px",
           boxShadow:
             "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
@@ -76,6 +78,7 @@ const HomePage = () => {
         // Tweak internal sizing mechanics
         gsap.to(searchInputRef.current, { fontSize: "14px", duration: 0.2 });
         gsap.to(cityInputRef.current, { fontSize: "12px", duration: 0.2 });
+        gsap.to(pincodeInputRef.current, { fontSize: "12px", duration: 0.2 });
 
         // Smoothly fade-in the miniature navigation action trigger icon
         if (actionButtonRef.current) {
@@ -103,6 +106,7 @@ const HomePage = () => {
 
         gsap.to(searchInputRef.current, { fontSize: "16px", duration: 0.2 });
         gsap.to(cityInputRef.current, { fontSize: "16px", duration: 0.2 });
+        gsap.to(pincodeInputRef.current, { fontSize: "16px", duration: 0.2 });
       }
     });
 
@@ -114,6 +118,7 @@ const HomePage = () => {
     const queryParams = {
       search: searchTerm,
       city: cityFilter,
+      pincode: pincodeFilter,
     };
     dispatch(fetchServices(queryParams));
     const featuredSection = document.getElementById("featured-services");
@@ -130,6 +135,7 @@ const HomePage = () => {
         search: searchTerm,
         category: nextCat,
         city: cityFilter,
+        pincode: pincodeFilter,
       }),
     );
 
@@ -143,7 +149,6 @@ const HomePage = () => {
   const visibleCategories = showAllCategories
     ? categories
     : categories.slice(0, 8);
-  console.log(serviceList, "serviceList");
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50">
@@ -175,12 +180,12 @@ const HomePage = () => {
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/10 p-2 rounded-2xl"
+                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/60 p-2 rounded-2xl"
                 >
                   {/* Search Term Input Field */}
                   <div className="flex-1 relative flex items-center w-full h-full min-w-0">
                     <Search
-                      className="text-zinc-200 shrink-0 absolute left-2 transition-all duration-300"
+                      className="text-zinc-900 shrink-0 absolute left-2 transition-all duration-300"
                       size={16}
                     />
                     <input
@@ -189,14 +194,14 @@ const HomePage = () => {
                       placeholder="Search services..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-8 pr-2 py-0.5 text-[8px]"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none pl-8 pr-2 py-0.5 text-[8px]"
                     />
                   </div>
 
                   {/* City Filter Layout Wrapper */}
                   <div className="relative flex items-center border-l border-zinc-800 pl-2 pr-1 h-6 max-w-[90px] sm:max-w-[140px] transition-all duration-300">
                     <MapPin
-                      className="absolute left-2 text-zinc-200 shrink-0"
+                      className="absolute left-2 text-zinc-800 shrink-0"
                       size={14}
                     />
                     <input
@@ -205,7 +210,19 @@ const HomePage = () => {
                       placeholder="City"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none truncate pl-6 text-sm"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none truncate pl-6 text-sm"
+                    />
+                  </div>
+
+                  {/* Pincode Filter Layout Wrapper */}
+                  <div className="relative flex items-center border-l border-zinc-800 pl-2 pr-1 h-6 max-w-[80px] sm:max-w-[120px] transition-all duration-300">
+                    <input
+                      ref={pincodeInputRef}
+                      type="text"
+                      placeholder="Pincode"
+                      value={pincodeFilter}
+                      onChange={(e) => setPincodeFilter(e.target.value)}
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none truncate pl-2 text-sm"
                     />
                   </div>
 
@@ -261,6 +278,18 @@ const HomePage = () => {
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
                       className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-10 sm:pl-12 pr-4 py-3 text-sm md:text-base"
+                    />
+                  </div>
+
+                  {/* Pincode Input */}
+                  <div className="relative flex items-center w-full sm:w-40 sm:border-l border-zinc-700 sm:pl-3">
+                    <input
+                      ref={pincodeInputRef}
+                      type="text"
+                      placeholder="Pincode"
+                      value={pincodeFilter}
+                      onChange={(e) => setPincodeFilter(e.target.value)}
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-3 pr-4 py-3 text-sm md:text-base"
                     />
                   </div>
 
@@ -378,7 +407,7 @@ const HomePage = () => {
 
         {/* Mobile Show More Button */}
         {categories.length > 8 && (
-          <div className="flex justify-center mt-6 sm:hidden">
+          <div className="flex justify-center mt-6 ">
             <button
               onClick={() => setShowAllCategories(!showAllCategories)}
               className="
@@ -427,13 +456,12 @@ const HomePage = () => {
               >
                 {/* Background Image */}
                 {service?.category?.backgroundImage && (
-                  <div className="absolute h-full w-full bg-green-500 inset-0 flex items-center justify-center">
+                  <div className="absolute h-full w-full bg-green-100 inset-0 flex items-center justify-center">
                     <img
                       src={service.category.backgroundImage}
                       alt={service.category?.name}
                       className="h-full object-center overflow-hidden select-none pointer-events-none"
                       draggable={false}
-                      幕
                     />
                   </div>
                 )}
@@ -489,7 +517,7 @@ const HomePage = () => {
                           className="w-5 h-5 object-contain flex-shrink-0"
                         />
                         <span className="line-clamp-1 text-[12px] font-bold text-taupe-950 glass px-2 py-1 !bg-white/40 rounded-md">
-                          {service?.provider?.serviceArea?.city ||
+                          {service?.serviceArea?.city ||
                             "Location not available"}
                         </span>
                       </span>

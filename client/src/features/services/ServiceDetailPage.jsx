@@ -16,6 +16,7 @@ const ServiceDetailPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { currentService, loading } = useSelector((state) => state.services);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchServiceDetail(id));
@@ -40,8 +41,18 @@ const ServiceDetailPage = () => {
     isEmergency,
     category,
     provider,
+    serviceArea,
   } = currentService;
-  const providerUser = provider?.user;
+   const providerUser = provider?.user || {};
+  
+
+  const canBook =
+    user?.address?.city &&
+    serviceArea?.city &&
+    user.address.city.trim().toLowerCase() ===
+      serviceArea.city.trim().toLowerCase() &&
+    (!serviceArea?.pincode || !user?.address?.pincode || 
+      user.address.pincode.trim() === serviceArea.pincode.trim());
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased">
@@ -89,12 +100,12 @@ const ServiceDetailPage = () => {
               <h2 className="text-xl font-bold tracking-tight text-zinc-50">
                 About the Service Provider
               </h2>
-              
+
               <div className="flex flex-col sm:flex-row items-start gap-5">
                 <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/10 shrink-0">
                   {providerUser?.name?.substring(0, 2).toUpperCase() || "SP"}
                 </div>
-                
+
                 <div className="flex-1 flex flex-col gap-3 w-full">
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
@@ -102,19 +113,24 @@ const ServiceDetailPage = () => {
                         {providerUser?.name || "Local Expert"}
                       </h3>
                       {provider?.isApproved && (
-                        <ShieldCheck size={18} className="text-emerald-400 fill-emerald-400/10" />
+                        <ShieldCheck
+                          size={18}
+                          className="text-emerald-400 fill-emerald-400/10"
+                        />
                       )}
                     </div>
-                    
+
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-400">
                       <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                        <Star size={16} className="fill-amber-400" /> 
-                        {provider?.rating?.toFixed(1) || "0.0"} 
-                        <span className="text-zinc-500 font-normal">({provider?.totalReviews || 0} reviews)</span>
+                        <Star size={16} className="fill-amber-400" />
+                        {provider?.rating?.toFixed(1) || "0.0"}
+                        <span className="text-zinc-500 font-normal">
+                          ({provider?.totalReviews || 0} reviews)
+                        </span>
                       </span>
                       <span className="text-zinc-700">•</span>
                       <span className="flex items-center gap-1.5">
-                        <Briefcase size={16} className="text-zinc-500" /> 
+                        <Briefcase size={16} className="text-zinc-500" />
                         {provider?.experience || 0} Years Experience
                       </span>
                     </div>
@@ -137,7 +153,9 @@ const ServiceDetailPage = () => {
               className="p-6 sm:p-8 flex flex-col gap-6 lg:sticky lg:top-28 bg-zinc-900 border border-zinc-800 shadow-2xl rounded-2xl"
             >
               <div className="flex justify-between items-baseline border-b border-zinc-800 pb-5">
-                <span className="text-zinc-400 text-sm font-medium">Estimated Price</span>
+                <span className="text-zinc-400 text-sm font-medium">
+                  Estimated Price
+                </span>
                 <span className="text-3xl font-extrabold tracking-tight text-indigo-400">
                   ₹{price}
                 </span>
@@ -149,7 +167,9 @@ const ServiceDetailPage = () => {
                     <Clock size={16} />
                   </div>
                   <div>
-                    <p className="text-xs text-zinc-500 font-medium">Duration</p>
+                    <p className="text-xs text-zinc-500 font-medium">
+                      Duration
+                    </p>
                     <p className="font-medium">~{duration} minutes</p>
                   </div>
                 </div>
@@ -159,8 +179,13 @@ const ServiceDetailPage = () => {
                     <MapPin size={16} />
                   </div>
                   <div>
-                    <p className="text-xs text-zinc-500 font-medium">Service Area</p>
-                    <p className="font-medium">{provider?.serviceArea?.city || "Local area"}</p>
+                    <p className="text-xs text-zinc-500 font-medium">
+                      Service Area
+                    </p>
+                    <p className="font-medium">
+                      {serviceArea?.city || "Local area"}
+                      {serviceArea?.pincode ? ` - ${serviceArea.pincode}` : ""}
+                    </p>
                   </div>
                 </div>
 
@@ -169,17 +194,36 @@ const ServiceDetailPage = () => {
                     <Tag size={16} />
                   </div>
                   <div>
-                    <p className="text-xs text-zinc-500 font-medium">Pricing Type</p>
+                    <p className="text-xs text-zinc-500 font-medium">
+                      Pricing Type
+                    </p>
                     <p className="font-medium">Fixed Rate</p>
                   </div>
                 </div>
               </div>
 
-              <Link to={`/bookings/new?serviceId=${currentService._id}`} className="w-full pt-2">
-                <Button variant="primary" className="w-full py-3 font-semibold text-base shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-200">
-                  Book This Service
+              {canBook ? (
+                <Link
+                  to={`/bookings/new?serviceId=${currentService._id}`}
+                  className="w-full pt-2"
+                >
+                  <Button
+                    variant="primary"
+                    className="w-full py-3 font-semibold text-base shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-200"
+                  >
+                    Book This Service
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="primary"
+                  disabled
+                  className="w-full py-3 font-semibold text-base cursor-not-allowed opacity-50"
+                  title="You can only book services available in your city and pincode."
+                >
+                  Service Not Available in Your Area
                 </Button>
-              </Link>
+              )}
             </Card>
           </div>
         </div>

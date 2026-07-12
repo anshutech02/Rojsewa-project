@@ -11,7 +11,7 @@ import { forgotPasswordTemplate, verifyEmailTemplate } from '../utils/emailTempl
 // @access  Public
 export const register = async (req, res, next) => {
   try {
-    const { name, email, phone, password, role, skills, bio, experience, serviceArea, availability } = req.body;
+    const { name, email, phone, password, role, skills, bio, experience, availability } = req.body;
 
     // Check if user already exists
     const userExists = await User.findOne({ email });
@@ -36,7 +36,6 @@ export const register = async (req, res, next) => {
         skills: skills || [],
         bio: bio || '',
         experience: experience || 0,
-        serviceArea: serviceArea || { city: '', radius: 10 },
         availability: availability || { days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'], startTime: '09:00', endTime: '18:00' },
         status: 'pending',
       });
@@ -181,10 +180,10 @@ export const updateProfile = async (req, res, next) => {
 
     let providerData = null;
     if (user.role === 'provider') {
-      const { skills, bio, experience, serviceArea, availability } = req.body;
+      const { skills, bio, experience, availability } = req.body;
       providerData = await Provider.findOneAndUpdate(
         { user: user._id },
-        { skills, bio, experience, serviceArea, availability },
+        { skills, bio, experience, availability },
         { new: true, runValidators: true }
       );
     }

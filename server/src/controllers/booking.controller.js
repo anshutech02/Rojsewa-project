@@ -10,7 +10,7 @@ import { sendBookingWhatsAppNotification } from '../utils/whatsappService.js';
 // @access  Private/Customer
 export const createBooking = async (req, res, next) => {
   try {
-    if(req.user.isVerified === false) {
+    if (req.user.isVerified === false) {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to create bookings.'));
     }
@@ -28,6 +28,47 @@ export const createBooking = async (req, res, next) => {
     }
 
     const providerId = service.provider._id;
+    console.log('address', address);
+
+    // Validate scheduled date and time
+    if (!scheduledDate || !scheduledTime) {
+      res.status(400);
+      return next(new Error("Scheduled date and time are required."));
+    }
+
+    const bookingDateTime = new Date(`${scheduledDate}T${scheduledTime}:00`);
+    const now = new Date();
+
+    if (isNaN(bookingDateTime.getTime())) {
+      res.status(400);
+      return next(new Error("Invalid scheduled date or time."));
+    }
+
+    if (bookingDateTime <= now) {
+      res.status(400);
+      return next(new Error("Scheduled date and time must be in the future."));
+    }
+
+    // Validate customer address city and pincode match the service area
+    if (!address || !address.city || !address.pincode) {
+      res.status(400);
+      return next(new Error('Address, city, and pincode are required for booking.'));
+    }
+
+    const serviceCity = service.serviceArea?.city?.trim().toLowerCase();
+    const servicePincode = service.serviceArea?.pincode?.trim();
+    const customerCity = address.city.trim().toLowerCase();
+    const customerPincode = address.pincode.trim();
+
+    if (serviceCity && customerCity !== serviceCity) {
+      res.status(400);
+      return next(new Error('Service is not available in your city'));
+    }
+
+    if (servicePincode && customerPincode !== servicePincode) {
+      res.status(400);
+      return next(new Error('Service is not available in your pincode'));
+    }
 
     // Create booking
     const booking = await Booking.create({
@@ -159,7 +200,7 @@ export const cancelBooking = async (req, res, next) => {
 
     // Auth check
     const isCustomer = booking.customer.toString() === req.user.id;
-    
+
     // Resolve provider user ID
     const providerObj = await Provider.findById(booking.provider);
     const isProvider = providerObj && providerObj.user.toString() === req.user.id;
@@ -224,7 +265,7 @@ export const cancelBooking = async (req, res, next) => {
 export const updateBookingStatus = async (req, res, next) => {
   try {
     const { status, note } = req.body;
-    
+
     if (!['accepted', 'rejected', 'in_progress', 'completed'].includes(status)) {
       res.status(400);
       return next(new Error('Invalid status update request'));

@@ -18,6 +18,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, provider, loading } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
+  console.log('user', user);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -38,7 +39,6 @@ const ProfilePage = () => {
         bio: provider?.bio || '',
         skills: provider?.skills?.join(', ') || '',
         experience: provider?.experience || '',
-        serviceCity: provider?.serviceArea?.city || '',
       });
     }
   }, [user, provider, reset]);
@@ -58,10 +58,6 @@ const ProfilePage = () => {
         bio: data.bio,
         skills: data.skills ? data.skills.split(',').map(s => s.trim()) : [],
         experience: Number(data.experience) || 0,
-        serviceArea: {
-          city: data.serviceCity || '',
-          radius: 10,
-        }
       })
     };
 
@@ -218,11 +214,6 @@ const ProfilePage = () => {
                     type="number"
                     disabled={!isEditing}
                     {...register('experience')}
-                  />
-                  <Input
-                    label="Service City"
-                    disabled={!isEditing}
-                    {...register('serviceCity')}
                   />
                   <Input
                     label="Verification Status"

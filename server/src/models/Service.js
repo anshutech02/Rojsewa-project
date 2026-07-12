@@ -17,6 +17,15 @@ const serviceSchema = new mongoose.Schema({
     trim: true,
     maxlength: 100,
   },
+  serviceArea: {
+    city: { type: String, default: '' },
+    radius: { type: Number, default: 10 },
+    pincode: { type: String, default: '' },
+    coordinates: {
+      lat: Number,
+      lng: Number,
+    },
+  },
   description: {
     type: String,
     required: [true, 'Service description is required'],
@@ -58,6 +67,7 @@ const serviceSchema = new mongoose.Schema({
 serviceSchema.index({ title: 'text', description: 'text', tags: 'text' });
 serviceSchema.index({ category: 1, isActive: 1 });
 serviceSchema.index({ provider: 1 });
+serviceSchema.index({ 'serviceArea.pincode': 1 });
 
 const Service = mongoose.model('Service', serviceSchema);
 export default Service;
