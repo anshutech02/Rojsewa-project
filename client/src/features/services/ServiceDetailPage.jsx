@@ -43,15 +43,15 @@ const ServiceDetailPage = () => {
     provider,
     serviceArea,
   } = currentService;
-   const providerUser = provider?.user || {};
-  
+  const providerUser = provider?.user || {};
 
   const canBook =
     user?.address?.city &&
     serviceArea?.city &&
     user.address.city.trim().toLowerCase() ===
       serviceArea.city.trim().toLowerCase() &&
-    (!serviceArea?.pincode || !user?.address?.pincode || 
+    (!serviceArea?.pincode ||
+      !user?.address?.pincode ||
       user.address.pincode.trim() === serviceArea.pincode.trim());
 
   return (
@@ -215,14 +215,19 @@ const ServiceDetailPage = () => {
                   </Button>
                 </Link>
               ) : (
-                <Button
-                  variant="primary"
-                  disabled
-                  className="w-full py-3 font-semibold text-base cursor-not-allowed opacity-50"
-                  title="You can only book services available in your city and pincode."
-                >
-                  Service Not Available in Your Area
-                </Button>
+                <>
+                  <Button
+                    variant="primary"
+                    disabled
+                    className="w-full py-3 font-semibold text-base cursor-not-allowed opacity-50"
+                    title="You can only book services available in your city and pincode."
+                  >
+                    Service Not Available in Your Area
+                  </Button>
+                  <div className="w-full py-3 text-center text-base font-semibold text-gray-600">
+                    Service Not Available. Please update your address to book.
+                  </div>
+                </>
               )}
             </Card>
           </div>

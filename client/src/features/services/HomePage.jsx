@@ -180,12 +180,12 @@ const HomePage = () => {
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/60 p-2 rounded-2xl"
+                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/40 p-2 rounded-2xl"
                 >
                   {/* Search Term Input Field */}
                   <div className="flex-1 relative flex items-center w-full h-full min-w-0">
                     <Search
-                      className="text-zinc-900 shrink-0 absolute left-2 transition-all duration-300"
+                      className="text-zinc-900 shrink-0 hidden sm:block absolute transition-all duration-300"
                       size={16}
                     />
                     <input
@@ -194,14 +194,14 @@ const HomePage = () => {
                       placeholder="Search services..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none pl-8 pr-2 py-0.5 text-[8px]"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none sm:pl-6 pr-1 py-0.5 text-[10px]"
                     />
                   </div>
 
                   {/* City Filter Layout Wrapper */}
-                  <div className="relative flex items-center border-l border-zinc-800 pl-2 pr-1 h-6 max-w-[90px] sm:max-w-[140px] transition-all duration-300">
+                  <div className="relative  flex items-center border-l border-zinc-800 pl-1 pr-1 h-6 w-[70px]  sm:w-[200px] transition-all duration-300">
                     <MapPin
-                      className="absolute left-2 text-zinc-800 shrink-0"
+                      className="absolute hidden sm:block left-2 text-zinc-800 shrink-0"
                       size={14}
                     />
                     <input
@@ -210,19 +210,19 @@ const HomePage = () => {
                       placeholder="City"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none truncate pl-6 text-sm"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none truncate sm:pl-5 text-[12px]"
                     />
                   </div>
 
                   {/* Pincode Filter Layout Wrapper */}
-                  <div className="relative flex items-center border-l border-zinc-800 pl-2 pr-1 h-6 max-w-[80px] sm:max-w-[120px] transition-all duration-300">
+                  <div className="relative flex items-center border-l border-zinc-800 pl-1 pr-1 h-6 w-[70px] max-w-[80px] sm:w-[150px] transition-all duration-300">
                     <input
                       ref={pincodeInputRef}
                       type="text"
                       placeholder="Pincode"
                       value={pincodeFilter}
                       onChange={(e) => setPincodeFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none truncate pl-2 text-sm"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none truncate pl-1 text-[12px]"
                     />
                   </div>
 
