@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getMe } from "./store/authSlice.js";
@@ -17,16 +17,44 @@ import ProviderDashboard from "./features/provider/ProviderDashboard.jsx";
 import AdminDashboard from "./features/admin/AdminDashboard.jsx";
 import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
 import Spinner from "./components/ui/Spinner.jsx";
+import { waitForServer } from "./utils/waitForServer.js";
+import TypingText from "./components/ui/TypingText.jsx";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      dispatch(getMe());
-    }
+    const initialize = async () => {
+      await waitForServer();
+
+      if (localStorage.getItem("accessToken")) {
+        try {
+          await dispatch(getMe()).unwrap();
+        } catch (err) {
+          // Ignore if token is invalid
+        }
+      }
+
+      setAppReady(true);
+    };
+
+    initialize();
   }, [dispatch]);
+
+  if (!appReady) {
+  return (
+    <div className="w-screen h-screen flex flex-col items-center justify-center">
+      <Spinner />
+
+      <TypingText />
+
+      <p className="mt-2 text-sm text-gray-500">
+        This may take a few seconds if the server is waking up.
+      </p>
+    </div>
+  );
+}
 
   return (
     <BrowserRouter>

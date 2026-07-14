@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://rojsewa.onrender.com/api',
   withCredentials: true,
   timeout: 60000, // 60s timeout to handle Render cold starts (~30-50s)
 });
@@ -74,7 +74,7 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          'http://localhost:5000/api/auth/refresh',
+          'https://rojsewa.onrender.com/api/auth/refresh',
           {},
           { withCredentials: true, timeout: 60000 }
         );

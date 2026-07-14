@@ -60,8 +60,7 @@ const ServiceForm = ({ onSubmit, initialData, categories, onCancel, loading }) =
         pincode: data.pincode || '',
       }
     };
-    delete formattedData.city;
-    delete formattedData.pincode;
+    
     onSubmit(formattedData);
   };
 
