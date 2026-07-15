@@ -17,7 +17,7 @@ if (
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 587,
+  port: 2525, // Render free tier blocks port 587, so we use 2525 instead
   secure: false, // true for port 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
