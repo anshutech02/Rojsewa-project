@@ -17,14 +17,18 @@ export const sendTokenResponse = (user, statusCode, res) => {
   const refreshToken = generateRefreshToken(user._id);
   console.log("new access token", accessToken);
   console.log("new refresh token", refreshToken)
+  const isProd = process.env.NODE_ENV === "production";
+
+
 
   // Set cookie options
-  const cookieOptions = {
-    httpOnly: true,
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days matching refresh token
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' required for cross-site cookies (Vercel → Render)
-  };
+ const cookieOptions = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: isProd ? "none" : "lax",
+  path: "/",
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+};
 
   res.cookie('refreshToken', refreshToken, cookieOptions);
 

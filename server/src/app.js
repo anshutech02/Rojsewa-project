@@ -16,6 +16,7 @@ import notificationRoutes from './routes/notification.routes.js';
 import { errorHandler, notFound } from './middleware/error.middleware.js';
 
 const app = express();
+app.set('trust proxy', 1);
 
 // Security
 app.use(helmet());
