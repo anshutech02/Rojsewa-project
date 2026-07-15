@@ -148,17 +148,7 @@ const Navbar = () => {
                   </Button>
                 </Link>
 
-                {user && !user.isVerified && (
-                  <Link to="/verify-email" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10"
-                    >
-                      <MailWarning size={16} />
-                      Verify Email
-                    </Button>
-                  </Link>
-                )}
+                
                 {user?.role === "provider" && (
                   <Link to="/provider" onClick={() => setIsOpen(false)}>
                     <Button
