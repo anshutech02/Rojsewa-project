@@ -91,10 +91,10 @@ api.interceptors.response.use(
 
         processQueue(refreshError, null);
 
-        if (refreshError.response?.status === 401) {
-          localStorage.removeItem("accessToken");
-          window.location.href = "/login";
-        }
+        // if (refreshError.response?.status === 401) {
+        //   localStorage.removeItem("accessToken");
+        //   window.location.href = "/login";
+        // }
 
         return Promise.reject(refreshError);
       } finally {

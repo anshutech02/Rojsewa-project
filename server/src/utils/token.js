@@ -31,6 +31,7 @@ export const sendTokenResponse = (user, statusCode, res) => {
 };
 
   res.cookie('refreshToken', refreshToken, cookieOptions);
+  
 
   res.status(statusCode).json({
     success: true,
