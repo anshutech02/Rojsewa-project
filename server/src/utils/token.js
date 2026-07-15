@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 export const generateAccessToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '30m',
+    expiresIn: process.env.JWT_EXPIRE || '2m',
   });
 };
 
@@ -15,6 +15,8 @@ export const generateRefreshToken = (userId) => {
 export const sendTokenResponse = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
+  console.log("new access token", accessToken);
+  console.log("new refresh token", refreshToken)
 
   // Set cookie options
   const cookieOptions = {

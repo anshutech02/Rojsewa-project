@@ -117,7 +117,10 @@ export const logout = async (req, res, next) => {
 // @access  Public
 export const refresh = async (req, res, next) => {
   try {
+    console.log("=== REFRESH ===");
+  console.log("Cookies:", req.cookies);
     const refreshToken = req.cookies.refreshToken;
+    console.log(refreshToken)
 
     if (!refreshToken) {
       res.status(401);

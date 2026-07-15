@@ -84,10 +84,18 @@ api.interceptors.response.use(
         processQueue(null, newToken);
         return api(originalRequest);
       } catch (refreshError) {
+        console.log("Refresh failed");
+        console.log("Status:", refreshError.response?.status);
+        console.log("Data:", refreshError.response?.data);
+        console.log("Message:", refreshError.message);
+
         processQueue(refreshError, null);
-        // Refresh failed — token is truly invalid, clear auth
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+
+        if (refreshError.response?.status === 401) {
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
+        }
+
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
