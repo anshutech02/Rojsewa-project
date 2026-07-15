@@ -20,6 +20,7 @@ const RegisterPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = (data) => {
+    console.log("Register submitted", Date.now());
     const signupData = {
       ...data,
       role,

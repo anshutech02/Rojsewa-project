@@ -69,7 +69,7 @@ export const updateProviderProfile = async (req, res, next) => {
     const provider = await Provider.findOneAndUpdate(
       { user: req.user.id },
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: "after" , runValidators: true }
     );
 
     if (!provider) {

@@ -54,28 +54,7 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              {user && !user.isVerified && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 text-amber-400 border-amber-500/30 hover:bg-amber-500/10 animate-pulse"
-                  onClick={async () => {
-                    try {
-                      await api.post("/auth/send-verification-otp");
-                      toast.success("Verification code sent.");
-                      navigate("/verify-email");
-                    } catch (err) {
-                      toast.error(
-                        err.response?.data?.error ||
-                          "Failed to send verification code.",
-                      );
-                    }
-                  }}
-                >
-                  <MailWarning size={14} />
-                  Verify Email
-                </Button>
-              )}
+              
 
               {user?.role === "provider" && (
                 <Link to="/provider">

@@ -15,8 +15,11 @@ import { Clock, Tag, MapPin, ShieldCheck, Star, Briefcase } from "lucide-react";
 const ServiceDetailPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { currentService, loading } = useSelector((state) => state.services);
-  const { user } = useSelector((state) => state.auth);
+  const { currentService, loading, error } = useSelector(
+  (state) => state.services
+);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     dispatch(fetchServiceDetail(id));
@@ -25,13 +28,33 @@ const ServiceDetailPage = () => {
     };
   }, [dispatch, id]);
 
-  if (loading || !currentService) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
+  if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+      <Spinner size="lg" />
+    </div>
+  );
+}
+if (error) {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 text-white">
+      <h1 className="text-3xl font-bold">404</h1>
+
+      <p className="mt-2 text-zinc-400">
+        {error}
+      </p>
+
+      <Link to="/services">
+        <Button className="mt-6">
+          Back to Services
+        </Button>
+      </Link>
+    </div>
+  );
+}
+if (!currentService) {
+  return null;
+}
 
   const {
     title,
@@ -45,14 +68,15 @@ const ServiceDetailPage = () => {
   } = currentService;
   const providerUser = provider?.user || {};
 
-  const canBook =
-    user?.address?.city &&
-    serviceArea?.city &&
-    user.address.city.trim().toLowerCase() ===
-      serviceArea.city.trim().toLowerCase() &&
-    (!serviceArea?.pincode ||
-      !user?.address?.pincode ||
-      user.address.pincode.trim() === serviceArea.pincode.trim());
+const canBook =
+  isAuthenticated &&
+  user?.address?.city &&
+  serviceArea?.city &&
+  user.address.city.trim().toLowerCase() ===
+    serviceArea.city.trim().toLowerCase() &&
+  (!serviceArea?.pincode ||
+    !user?.address?.pincode ||
+    user.address.pincode.trim() === serviceArea.pincode.trim());
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased">
@@ -202,33 +226,54 @@ const ServiceDetailPage = () => {
                 </div>
               </div>
 
-              {canBook ? (
-                <Link
-                  to={`/bookings/new?serviceId=${currentService._id}`}
-                  className="w-full pt-2"
-                >
-                  <Button
-                    variant="primary"
-                    className="w-full py-3 font-semibold text-base shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-200"
-                  >
-                    Book This Service
-                  </Button>
-                </Link>
-              ) : (
-                <>
-                  <Button
-                    variant="primary"
-                    disabled
-                    className="w-full py-3 font-semibold text-base cursor-not-allowed opacity-50"
-                    title="You can only book services available in your city and pincode."
-                  >
-                    Service Not Available in Your Area
-                  </Button>
-                  <div className="w-full py-3 text-center text-base font-semibold text-gray-600">
-                    Service Not Available. Please update your address to book.
-                  </div>
-                </>
-              )}
+              {!isAuthenticated ? (
+  <Link to="/login" className="w-full pt-2">
+    <Button
+      variant="primary"
+      className="w-full py-3 font-semibold text-base shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-200"
+    >
+      Login to Book Service
+    </Button>
+  </Link>
+) : canBook ? (
+  <Link
+    to={`/bookings/new?serviceId=${currentService._id}`}
+    className="w-full pt-2"
+  >
+    <Button
+      variant="primary"
+      className="w-full py-3 font-semibold text-base shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-200"
+    >
+      Book This Service
+    </Button>
+  </Link>
+) : (
+  <>
+    <Button
+      variant="primary"
+      disabled
+      className="w-full py-3 font-semibold text-base cursor-not-allowed opacity-50"
+      title="You can only book services available in your city and pincode."
+    >
+      Service Not Available in Your Area
+    </Button>
+
+    <div className="w-full py-3 text-center text-sm text-gray-400">
+      Your address doesn't match the provider's service area.
+      <br />
+      Please update your profile address to book this service.
+    </div>
+
+    <Link to="/profile" className="w-full">
+      <Button
+        variant="secondary"
+        className="w-full py-3 font-semibold"
+      >
+        Update Address
+      </Button>
+    </Link>
+  </>
+)}
             </Card>
           </div>
         </div>

@@ -174,7 +174,7 @@ export const updateProfile = async (req, res, next) => {
     };
 
     const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
-      new: true,
+      returnDocument: "after" ,
       runValidators: true,
     });
 
@@ -184,7 +184,7 @@ export const updateProfile = async (req, res, next) => {
       providerData = await Provider.findOneAndUpdate(
         { user: user._id },
         { skills, bio, experience, availability },
-        { new: true, runValidators: true }
+        { returnDocument: "after" , runValidators: true }
       );
     }
 
@@ -253,6 +253,7 @@ export const forgotPassword = async (req, res, next) => {
       message: 'OTP sent to your email',
     });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };

@@ -33,13 +33,13 @@ export const getServices = async (req, res, next) => {
     }
 
     // Find services
-    
+
     let services = await Service.find(query)
       .populate({
         path: 'provider',
-        populate: { 
-          path: 'user', 
-          select: 'name email phone avatar address' 
+        populate: {
+          path: 'user',
+          select: 'name email phone avatar address'
         }
       })
       .populate('category');
@@ -48,7 +48,7 @@ export const getServices = async (req, res, next) => {
     if (rating || city) {
       services = services.filter((service) => {
         if (!service.provider) return false;
-        
+
         if (rating && service.provider.rating < Number(rating)) {
           return false;
         }
@@ -60,7 +60,7 @@ export const getServices = async (req, res, next) => {
         return true;
       });
     }
-    
+
     res.status(200).json({ success: true, count: services.length, services: services });
   } catch (error) {
     next(error);
@@ -75,7 +75,10 @@ export const getServiceById = async (req, res, next) => {
     const service = await Service.findById(req.params.id)
       .populate({
         path: 'provider',
-        populate: { path: 'user', select: 'name email phone avatar address' }
+        populate: {
+          path: 'user',
+          select: 'name email phone avatar address'
+        }
       })
       .populate('category');
 
@@ -84,8 +87,17 @@ export const getServiceById = async (req, res, next) => {
       return next(new Error('Service not found'));
     }
 
-    res.status(200).json({ success: true, service });
+    res.status(200).json({
+      success: true,
+      service
+    });
+
   } catch (error) {
+    if (error.name === 'CastError') {
+      res.status(404);
+      return next(new Error('Service not found'));
+    }
+
     next(error);
   }
 };
@@ -100,8 +112,8 @@ export const createService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Only registered providers can create services'));
     }
-    
-    if(provider.user.isVerified === false) {
+
+    if (provider.user.isVerified === false) {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to create services.'));
     }
@@ -142,7 +154,7 @@ export const updateService = async (req, res, next) => {
       res.status(403);
       return next(new Error('Not authorized'));
     }
-    if(provider.user.isVerified === false) {
+    if (provider.user.isVerified === false) {
       res.status(403);
       return next(new Error('Your email is not verified. Please verify your email to update services.'));
     }
@@ -164,7 +176,7 @@ export const updateService = async (req, res, next) => {
     }
 
     service = await Service.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     });
 

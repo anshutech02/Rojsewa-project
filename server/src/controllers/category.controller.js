@@ -113,7 +113,7 @@ export const updateCategory = async (req, res, next) => {
       req.params.id,
       updateData,
       {
-        new: true,
+        returnDocument: "after" ,
         runValidators: true
       }
     );

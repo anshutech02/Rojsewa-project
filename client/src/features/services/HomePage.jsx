@@ -373,14 +373,16 @@ const HomePage = () => {
               {/* Image or Fallback Icon Container */}
               <div className="relative z-10 w-full flex justify-center mb-3">
                 {cat.image ? (
-                  <div className="w-28 h- md:w-full md:h-28 rounded-xl overflow-hidden bg-zinc-900/40 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
+                  <>
+                    <div className="w-28 h- md:w-full md:h-28 rounded-xl overflow-hidden bg-zinc-900/40 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                      <img
+                        src={cat.image}
+                        alt={cat.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                  </>
                 ) : (
                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-zinc-800/50 border border-white/5 flex items-center justify-center text-2xl md:text-3xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                     <span>🔧</span>

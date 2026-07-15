@@ -10,9 +10,9 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
+  host: process.env.EMAIL_HOST || "smtp-relay.brevo.com",
+  port: parseInt(process.env.EMAIL_PORT || "587"),
+  secure: process.env.EMAIL_SECURE === "true", // true for port 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,19 +20,33 @@ const transporter = nodemailer.createTransport({
 });
 
 transporter.verify((err, success) => {
-  console.log(err || success);
+  if (err) {
+    console.error("SMTP Connection Error:", err);
+  } else {
+    console.log("SMTP Mailer initialized successfully!");
+  }
 });
+
 
 export const sendEmail = async ({ to, subject, html }) => {
   try {
+    const fromAddress = process.env.EMAIL_FROM;
+    console.log("Sending email to:", to);
+    console.log({
+      EMAIL_USER: process.env.EMAIL_USER,
+      EMAIL_FROM: process.env.EMAIL_FROM,
+      fromAddress,
+    });
+
     const info = await transporter.sendMail({
-      from: `"RojSewa" <${process.env.EMAIL_FROM}>`,
+      from: `"RojSewa" <${fromAddress}>`,
       to,
       subject,
       html,
     });
+    console.log("Email sent successfully:", info.messageId);
+    console.log(info);
 
-    console.log("Email sent:", info.messageId);
     return info;
   } catch (error) {
     console.error("Email Error:", error);

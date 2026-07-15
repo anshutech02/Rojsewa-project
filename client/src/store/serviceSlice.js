@@ -9,7 +9,7 @@ export const fetchServices = createAsyncThunk(
       const params = new URLSearchParams();
       if (search) params.append('search', search);
       if (category) params.append('category', category);
-      if (minPrice) params.append('minPrice', minPrice); 
+      if (minPrice) params.append('minPrice', minPrice);
       if (maxPrice) params.append('maxPrice', maxPrice);
       if (rating) params.append('rating', rating);
       if (isEmergency) params.append('isEmergency', isEmergency);
@@ -31,7 +31,11 @@ export const fetchCategories = createAsyncThunk(
       const { data } = await api.get('/categories');
       return data.categories;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to fetch categories');
+      return rejectWithValue(
+  error.response?.data?.message ||
+  error.response?.data?.error ||
+  'Failed to fetch service detail'
+);
     }
   }
 );
@@ -136,15 +140,17 @@ const serviceSlice = createSlice({
       .addCase(fetchServiceDetail.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.currentService = null;
       })
       .addCase(fetchServiceDetail.fulfilled, (state, action) => {
         state.loading = false;
         state.currentService = action.payload;
       })
       .addCase(fetchServiceDetail.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+  state.loading = false;
+  state.currentService = null;
+  state.error = action.payload;
+})
       // Fetch Provider Services
       .addCase(fetchProviderServices.pending, (state) => {
         state.loading = true;
