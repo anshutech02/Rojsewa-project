@@ -285,7 +285,7 @@ const BookingDetailPage = () => {
           </div>
         </div>
       </main>
-      {(status === "accepted" ||
+      {user.role === 'customer' && (status === "accepted" ||
         status === "in_progress" ||
         status === "pending") &&
         provider?.user?.phone && (

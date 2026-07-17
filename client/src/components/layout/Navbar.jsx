@@ -173,13 +173,24 @@ const Navbar = () => {
                   </Link>
                 )}
 
+                {/* {user.role === 'customer' && (
+                  <Link to="/bookings" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
+                    <ClipboardList size={16} />
+                    My Bookings
+                  </Button>
+                </Link>
+                )} */}
                 <Link to="/bookings" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-2"
                   >
                     <ClipboardList size={16} />
-                    {user?.role === "admin" ? "All Bookings" : "My Bookings"}
+                    All Bookings
                   </Button>
                 </Link>
 
