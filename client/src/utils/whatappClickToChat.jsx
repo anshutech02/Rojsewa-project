@@ -13,31 +13,41 @@ const WhatsAppOrder = ({
   // Remove spaces, +, -, ()
   let cleanedPhone = phoneNumber.replace(/\D/g, "");
 
-  // Automatically add India's country code if missing
+  // Add India's country code if missing
   if (cleanedPhone.length === 10) {
     cleanedPhone = `91${cleanedPhone}`;
   }
 
-  const statusMessage = {
-    accepted: `My booking has been *accepted* ✅.`,
-    in_progress: `My booking is currently *in progress* 🚀.`,
+  const statusMessages = {
+    pending: `My booking request is currently *pending approval* ⏳.
+I'm reaching out to know if there is any update regarding my booking.`,
+
+    accepted: `My booking has been *accepted* ✅.
+I'm contacting you regarding the next steps.`,
+
+    in_progress: `My booking is currently *in progress* 🚀.
+I wanted to get an update regarding the service.`,
+
+    completed: `My booking has been *completed* 🎉.
+Thank you for your service!`,
+
+    cancelled: `My booking has been *cancelled* ❌.
+I'm contacting you regarding the cancellation.`,
   };
 
   const message = `Hello! 👋
 
 I'm *${customerName}*.
 
-${statusMessage[status] || ""}
+${statusMessages[status] || "I'm contacting you regarding my booking."}
 
 📌 Booking ID: ${bookingId}
-🛠 Service: ${serviceName}
-
-I'm contacting you regarding my booking.
+🛠️ Service: ${serviceName}
 
 Thank you 😊`;
 
   const whatsappURL = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(
-    message,
+    message
   )}`;
 
   return (
@@ -66,10 +76,7 @@ Thank you 😊`;
         href={whatsappURL}
         target="_blank"
         rel="noopener noreferrer"
-        whileHover={{
-          scale: 1.08,
-          rotate: 5,
-        }}
+        whileHover={{ scale: 1.08, rotate: 5 }}
         whileTap={{ scale: 0.92 }}
         aria-label="Contact provider on WhatsApp"
         className="

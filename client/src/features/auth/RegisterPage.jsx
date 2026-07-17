@@ -93,11 +93,11 @@ const RegisterPage = () => {
               />
 
               <Input
-                label="Phone Number"
+                label="WhatsApp Number"
                 type="tel"
                 placeholder="+91 98765 43210"
                 error={errors.phone}
-                {...register('phone', { required: 'Phone is required' })}
+                {...register('phone', { required: 'WhatsApp number is required' })}
               />
 
               <Input

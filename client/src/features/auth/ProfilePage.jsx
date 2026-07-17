@@ -174,7 +174,7 @@ const ProfilePage = () => {
               />
 
               <Input
-                label="Phone Number"
+                label="WhatsApp Number"
                 disabled={!isEditing}
                 error={errors.phone}
                 {...register("phone")}
