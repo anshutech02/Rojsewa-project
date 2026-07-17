@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchServices, fetchCategories } from "../../store/serviceSlice.js";
+import TextType from "../../components/ui/TextType.jsx";
 import {
   Search,
   MapPin,
@@ -11,6 +12,7 @@ import {
   CheckCircle,
   BadgeCheck,
   LucideTruckElectric,
+  
 } from "lucide-react";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
@@ -148,7 +150,7 @@ const HomePage = () => {
 
   const visibleCategories = showAllCategories
     ? categories
-    : categories.slice(0, 8);
+    : categories.slice(0, 9);
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50">
@@ -161,11 +163,31 @@ const HomePage = () => {
       >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.12),transparent_50%)]" />
         <div className="relative max-w-5xl mx-auto text-center flex flex-col gap-4 md:gap-6 items-center">
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Find Trusted Local{" "}
-            <span className="gradient-text">Service Providers</span>
+          <h1 className="text-4xl gradient-text  sm:text-6xl font-[Neue] font-extrabold  ">
+            Find Trusted Local
           </h1>
-          <p className="text-base sm:text-lg text-shadow-orange-200 max-w-2xl px-2">
+          <div className=" text-3xl text-[#E6E6FA] sm:text-6xl font-[Neue] font-extrabold  min-h-[1.2em]">
+            <TextType
+              text={[
+                "Service Providers",
+                "Electricians",
+                "Plumbers",
+                "Carpenters",
+                "AC Repair Experts",
+                "Home Cleaning Services",
+                "Beauty Professionals",
+                "Mechanics",
+              ]}
+              typingSpeed={75}
+              deletingSpeed={45}
+              pauseDuration={1800}
+              showCursor
+              cursorCharacter="!"
+        
+              cursorBlinkDuration={0.5}
+            />
+          </div>
+          <p className="text-base sm:text-lg   text-shadow-2xs font-[Neue] text-shadow-gray-950 max-w-2xl px-2">
             Book verified electricians, plumbers, water suppliers, and
             technicians in your neighborhood in just a few clicks.
           </p>
@@ -180,10 +202,10 @@ const HomePage = () => {
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-row gap-2 items-center glass !bg-white/40 p-2 rounded-2xl"
+                  className="mx-auto flex flex-row gap-2 items-center gradient-glass p-2 rounded-2xl"
                 >
                   {/* Search Term Input Field */}
-                  <div className="flex-1 relative flex items-center w-full h-full min-w-0">
+                  <div className="flex-1 relative flex items-center border border-amber-50/40 px-1 sm:px-2 rounded-full w-full h-6 ">
                     <Search
                       className="text-zinc-900 shrink-0 hidden sm:block absolute transition-all duration-300"
                       size={16}
@@ -191,15 +213,15 @@ const HomePage = () => {
                     <input
                       ref={searchInputRef}
                       type="text"
-                      placeholder="Search services..."
+                      placeholder="Services..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none sm:pl-6 pr-1 py-0.5 text-[10px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none sm:pl-6 pl-1 py-0.5 text-[10px]"
                     />
                   </div>
 
                   {/* City Filter Layout Wrapper */}
-                  <div className="relative  flex items-center border-l border-zinc-800 pl-1 pr-1 h-6 w-[70px]  sm:w-[200px] transition-all duration-300">
+                  <div className="relative  flex items-center border-1 rounded-full border-amber-50/40 px-1 sm:px-3 h-6 w-[70px]  sm:w-[200px] transition-all duration-300">
                     <MapPin
                       className="absolute hidden sm:block left-2 text-zinc-800 shrink-0"
                       size={14}
@@ -210,19 +232,19 @@ const HomePage = () => {
                       placeholder="City"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none truncate sm:pl-5 text-[12px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none truncate px-1 sm:pl-5 text-[12px]"
                     />
                   </div>
 
                   {/* Pincode Filter Layout Wrapper */}
-                  <div className="relative flex items-center border-l border-zinc-800 pl-1 pr-1 h-6 w-[70px] max-w-[80px] sm:w-[150px] transition-all duration-300">
+                  <div className="relative flex items-center border-1 rounded-full border-amber-50/40 pl-1 pr-1 h-6 w-[70px] max-w-[80px] sm:w-[150px] transition-all duration-300">
                     <input
                       ref={pincodeInputRef}
                       type="text"
                       placeholder="Pincode"
                       value={pincodeFilter}
                       onChange={(e) => setPincodeFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-gradient-text focus:outline-none truncate pl-1 text-[12px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none truncate pl-1 text-[12px]"
                     />
                   </div>
 
@@ -241,18 +263,15 @@ const HomePage = () => {
               /* ==========================================================================
 2. NON-STICKY SEARCH BAR (Standard Inline Layout)
 ========================================================================== */
-              <div className="relative px-0">
+              <div className="relative px-0 -mt-8">
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-col sm:flex-row gap-2 glass !bg-white/10  p-2 rounded-2xl"
+                  className="mx-auto flex flex-col sm:flex-row gap-2 glass !bg-white/60  p-2 rounded-2xl"
                 >
                   {/* Search Input */}
-                  <div className="relative flex items-center w-full">
-                    <Search
-                      className="absolute left-3 text-zinc-200"
-                      size={18}
-                    />
+                  <div className="relative flex items-center border-2 px-2 gap-2  rounded-full w-full">
+                    <Search className=" text-zinc-900" size={18} />
 
                     <input
                       ref={searchInputRef}
@@ -260,16 +279,13 @@ const HomePage = () => {
                       placeholder="What service do you need?"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-10 pr-4 py-3 text-sm md:text-base"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none  py-3 text-sm md:text-base"
                     />
                   </div>
 
                   {/* City Input */}
-                  <div className="relative flex items-center w-full sm:w-48 sm:border-l border-zinc-700 sm:pl-3">
-                    <MapPin
-                      className="absolute left-3 sm:left-5 text-zinc-200"
-                      size={18}
-                    />
+                  <div className="relative flex items-center w-full sm:w-48 border-2 rounded-full gap-2 px-2 sm:pl-3">
+                    <MapPin className=" text-zinc-900" size={18} />
 
                     <input
                       ref={cityInputRef}
@@ -277,19 +293,19 @@ const HomePage = () => {
                       placeholder="City"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-10 sm:pl-12 pr-4 py-3 text-sm md:text-base"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none  pr-4 py-3 text-sm md:text-base"
                     />
                   </div>
 
                   {/* Pincode Input */}
-                  <div className="relative flex items-center w-full sm:w-40 sm:border-l border-zinc-700 sm:pl-3">
+                  <div className="relative flex items-center w-full sm:w-40 border-2 rounded-full px-2  sm:pl-3">
                     <input
                       ref={pincodeInputRef}
                       type="text"
                       placeholder="Pincode"
                       value={pincodeFilter}
                       onChange={(e) => setPincodeFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-zinc-300 focus:outline-none pl-3 pr-4 py-3 text-sm md:text-base"
+                      className="w-full bg-transparent border-0 text-zinc-900 placeholder-zinc-500 focus:outline-none pr-4 py-3 text-sm md:text-base"
                     />
                   </div>
 
@@ -298,7 +314,7 @@ const HomePage = () => {
                     ref={actionButtonRef}
                     type="submit"
                     aria-label="Submit Search"
-                    className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-5 py-2 transition-colors shadow-md shrink-0"
+                    className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 py-2 transition-colors shadow-2xl hover:scale-0.8 inset-0.5"
                   >
                     Search
                   </button>
@@ -335,9 +351,10 @@ const HomePage = () => {
 
         {/* Categories Grid */}
         <div
+        id="categories"
           className={`
       grid gap-3 md:gap-5
-      grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8
+      grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8
       transition-all duration-300
     `}
         >
@@ -394,7 +411,7 @@ const HomePage = () => {
               <span
                 className={`
       relative z-10 w-full
-      text-xs md:text-sm font-medium 
+      text-[10px] md:text-sm font-medium 
       tracking-wide leading-snug line-clamp-2
       transition-colors duration-300
 
@@ -506,7 +523,7 @@ const HomePage = () => {
                     <h3 className="text-base sm:text-lg glass rounded-md !bg-white/30 p-1 font-bold text-zinc-900 leading-snug">
                       <Link
                         to={`/services/${service._id}`}
-                        className="block w-full rounded-md p-1 transition-colors hover:text-indigo-400 break-words"
+                        className="block w-full rounded-md p-1 transition-colors gradient-text hover:text-indigo-400 break-words"
                       >
                         <span className="line-clamp-2">{service.title}</span>
                       </Link>
@@ -532,7 +549,7 @@ const HomePage = () => {
 
                   <div className="border-t border-zinc-700/70 mt-2 pt-4 flex items-center justify-between glass !bg-zinc-400/20 p-1 rounded-md">
                     <div className="flex flex-col">
-                      <span className="text-lg px-2 font-extrabold text-indigo-500">
+                      <span className="text-lg px-2 font-extrabold gradient-text">
                         ₹{service.price}
                       </span>
                       <div className="flex items-center gap-2 rounded-full border px-3 py-1 backdrop-blur-md">

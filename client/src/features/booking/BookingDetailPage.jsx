@@ -264,36 +264,39 @@ const BookingDetailPage = () => {
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm border-t border-zinc-800/80 pt-3">
-                <span className="text-zinc-400 font-bold">Total Paid</span>
+                <span className="text-zinc-400 font-bold">Total Charges</span>
                 <span className="text-lg font-bold text-indigo-400">
                   ₹{totalAmount}
                 </span>
               </div>
 
               {/* Action Buttons */}
-              {["pending", "accepted"].includes(status) && (
-                <Button
-                  variant="danger"
-                  className="w-full mt-2"
-                  onClick={handleCancel}
-                >
-                  Cancel Booking
-                </Button>
-              )}
+              {user.role === "customer" &&
+                ["pending", "accepted"].includes(status) && (
+                  <Button
+                    variant="danger"
+                    className="w-full mt-2"
+                    onClick={handleCancel}
+                  >
+                    Cancel Booking
+                  </Button>
+                )}
             </Card>
           </div>
         </div>
       </main>
-      {(status === "accepted" || status === "in_progress" || status === "pending") &&
-  provider?.user?.phone && (
-    <WhatsAppOrder
-      phoneNumber={provider.user.phone}
-      customerName={user?.name}
-      serviceName={service?.title}
-      bookingId={currentBooking._id}
-      status={status}
-    />
-)}
+      {(status === "accepted" ||
+        status === "in_progress" ||
+        status === "pending") &&
+        provider?.user?.phone && (
+          <WhatsAppOrder
+            phoneNumber={provider.user.phone}
+            customerName={user?.name}
+            serviceName={service?.title}
+            bookingId={currentBooking._id}
+            status={status}
+          />
+        )}
       <Footer />
     </div>
   );

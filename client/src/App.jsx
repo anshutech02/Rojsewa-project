@@ -19,7 +19,11 @@ import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
 import Spinner from "./components/ui/Spinner.jsx";
 import { waitForServer } from "./utils/waitForServer.js";
 import TypingText from "./components/ui/TypingText.jsx";
-
+import PrivacyPolicy from "./components/legal/PrivacyPolicy.jsx";
+import TermsAndConditions from "./components/legal/TermsAndConditions.jsx";
+import Disclaimer from "./components/legal/Disclaimer.jsx";
+import CookiePolicy from "./components/legal/CookiePolicy.jsx";
+import RefundCancellationPolicy from "./components/legal/RefundCancellationPolicy.jsx";
 const App = () => {
   const dispatch = useDispatch();
   const [appReady, setAppReady] = useState(false);
@@ -66,6 +70,17 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/services/:id" element={<ServiceDetailPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/term-and-condition" element={<TermsAndConditions />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
+        <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
+        <Route path="/desclaimer" element={<Disclaimer />} />
+
+
+
+
+
+
 
         {/* Protected Customer Routes */}
         <Route
