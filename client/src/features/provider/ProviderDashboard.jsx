@@ -251,18 +251,13 @@ Thank you!`;
       sidebarLinks={providerLinks}
     >
       {/* Email Verification Banner */}
-      {provider.user && !provider.user.isVerified && (
+      {provider?.user && !provider?.user?.isVerified && (
         <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs md:text-sm font-medium py-2.5 px-4 text-center flex items-center justify-center gap-2 border-t border-amber-500/20">
           <span>
             ⚠️ Your email is not verified. Please verify it to secure your
             account.
           </span>
-          {/* <Link
-            to="/verify-email"
-            className="underline hover:text-amber-100 transition-colors ml-1 font-bold"
-          >
-            Verify Now
-          </Link> */}
+          
           <Button
             variant="outline"
             size="sm"
