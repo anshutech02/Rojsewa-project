@@ -60,10 +60,10 @@ export const createBooking = async (req, res, next) => {
     const customerCity = address.city.trim().toLowerCase();
     const customerPincode = address.pincode.trim();
 
-    if (serviceCity && customerCity !== serviceCity) {
-      res.status(400);
-      return next(new Error('Service is not available in your city'));
-    }
+    // if (serviceCity && customerCity !== serviceCity) {
+    //   res.status(400);
+    //   return next(new Error('Service is not available in your city'));
+    // }
 
     if (servicePincode && customerPincode !== servicePincode) {
       res.status(400);

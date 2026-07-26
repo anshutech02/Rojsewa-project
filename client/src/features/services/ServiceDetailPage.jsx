@@ -72,8 +72,6 @@ const canBook =
   isAuthenticated &&
   user?.address?.city &&
   serviceArea?.city &&
-  user.address.city.trim().toLowerCase() ===
-    serviceArea.city.trim().toLowerCase() &&
   (!serviceArea?.pincode ||
     !user?.address?.pincode ||
     user.address.pincode.trim() === serviceArea.pincode.trim());
