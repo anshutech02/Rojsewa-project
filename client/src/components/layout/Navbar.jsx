@@ -36,7 +36,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-950/60 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
@@ -207,7 +207,7 @@ const Navbar = () => {
                 <Button
                   variant="secondary"
                   onClick={handleLogout}
-                  className="w-full justify-start gap-2"
+                  className="w-full justify-start gap-2 "
                 >
                   <LogOut size={16} />
                   Logout

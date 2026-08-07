@@ -80,9 +80,9 @@ const canBook =
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-8">
+      <main className="flex-1  max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-8">
         {/* Header Breadcrumb / Category Badges */}
-        <div className="flex flex-col gap-4">
+        <div className="flex  flex-col gap-4">
           <div className="flex items-center gap-3">
             <span className="px-3 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-[0.625rem] sm:text-xs font-semibold tracking-wide text-indigo-400 uppercase">
               {category?.name || "Category"}

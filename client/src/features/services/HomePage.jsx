@@ -157,13 +157,16 @@ const HomePage = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section
-        className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900 bg-zinc-950 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/downloa.jpg')` }}
-      >
+     <section
+  className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900 bg-zinc-950 bg-no-repeat bg-center"
+  style={{
+    backgroundImage: "url('/Firefly.jpg')",
+    backgroundSize: "cover", // Shows the full image
+  }}
+>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.12),transparent_50%)]" />
         <div className="relative max-w-5xl mx-auto text-center flex flex-col gap-4 md:gap-6 items-center">
-          <h1 className="text-4xl gradient-text  sm:text-6xl font-[Neue] font-extrabold  ">
+          <h1 className="text-4xl text-red-400  sm:text-6xl font-[Neue] font-extrabold  ">
             Find Trusted Local
           </h1>
           <div className=" text-3xl text-[#E6E6FA] sm:text-6xl font-[Neue] font-extrabold  min-h-[1.2em]">
@@ -202,12 +205,12 @@ const HomePage = () => {
                 <form
                   ref={searchBarRef}
                   onSubmit={handleSearch}
-                  className="mx-auto flex flex-row gap-2 items-center gradient-glass p-2 rounded-2xl"
+                  className="mx-auto flex flex-row gap-2 items-center  p-2 rounded-2xl"
                 >
                   {/* Search Term Input Field */}
                   <div className="flex-1 relative flex items-center border border-amber-50/40 px-1 sm:px-2 rounded-full w-full h-6 ">
                     <Search
-                      className="text-zinc-900 shrink-0 hidden sm:block absolute transition-all duration-300"
+                      className="text-zinc-100 shrink-0 hidden sm:block absolute transition-all duration-300"
                       size={16}
                     />
                     <input
@@ -216,14 +219,14 @@ const HomePage = () => {
                       placeholder="Services..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none sm:pl-6 pl-1 py-0.5 text-[10px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder:text-zinc-400 focus:outline-none sm:pl-6 pl-1 py-0.5 text-[10px]"
                     />
                   </div>
 
                   {/* City Filter Layout Wrapper */}
                   <div className="relative  flex items-center border-1 rounded-full border-amber-50/40 px-1 sm:px-3 h-6 w-[70px]  sm:w-[200px] transition-all duration-300">
                     <MapPin
-                      className="absolute hidden sm:block left-2 text-zinc-800 shrink-0"
+                      className="absolute hidden sm:block left-2 text-zinc-100 shrink-0"
                       size={14}
                     />
                     <input
@@ -232,7 +235,7 @@ const HomePage = () => {
                       placeholder="City"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none truncate px-1 sm:pl-5 text-[12px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder:text-zinc-400 focus:outline-none truncate px-1 sm:pl-5 text-[12px]"
                     />
                   </div>
 
@@ -244,7 +247,7 @@ const HomePage = () => {
                       placeholder="Pincode"
                       value={pincodeFilter}
                       onChange={(e) => setPincodeFilter(e.target.value)}
-                      className="w-full bg-transparent border-0 text-zinc-100 placeholder-gradient-text focus:outline-none truncate pl-1 text-[12px]"
+                      className="w-full bg-transparent border-0 text-zinc-100 placeholder:text-zinc-400 focus:outline-none truncate pl-1 text-[12px]"
                     />
                   </div>
 
@@ -314,7 +317,7 @@ const HomePage = () => {
                     ref={actionButtonRef}
                     type="submit"
                     aria-label="Submit Search"
-                    className="w-full sm:w-auto flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 py-2 transition-colors shadow-2xl hover:scale-0.8 inset-0.5"
+                    className="w-full sm:w-auto flex items-center justify-center bg-indigo-600/80 hover:bg-indigo-700 text-white rounded-full px-5 py-2 transition-colors shadow-2xl hover:scale-0.8 inset-0.5"
                   >
                     Search
                   </button>
