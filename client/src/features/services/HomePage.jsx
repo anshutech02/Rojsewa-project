@@ -160,7 +160,7 @@ const HomePage = () => {
      <section
   className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900 bg-zinc-950 bg-no-repeat bg-center"
   style={{
-    backgroundImage: "url('/Firefly.jpg')",
+    backgroundImage: "url('/Firefly.webp')",
     backgroundSize: "cover", // Shows the full image
   }}
 >
