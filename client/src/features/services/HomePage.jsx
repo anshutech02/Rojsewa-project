@@ -12,7 +12,6 @@ import {
   CheckCircle,
   BadgeCheck,
   LucideTruckElectric,
-  
 } from "lucide-react";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
@@ -157,13 +156,13 @@ const HomePage = () => {
       <Navbar />
 
       {/* Hero Section */}
-     <section
-  className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900 bg-zinc-950 bg-no-repeat bg-center"
-  style={{
-    backgroundImage: "url('/Firefly.webp')",
-    backgroundSize: "cover", // Shows the full image
-  }}
->
+      <section
+        className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-zinc-900 bg-zinc-950 bg-no-repeat bg-center"
+        style={{
+          backgroundImage: "url('/Firefly.webp')",
+          backgroundSize: "cover", // Shows the full image
+        }}
+      >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.12),transparent_50%)]" />
         <div className="relative max-w-5xl mx-auto text-center flex flex-col gap-4 md:gap-6 items-center">
           <h1 className="text-4xl text-red-400  sm:text-6xl font-[Neue] font-extrabold  ">
@@ -186,7 +185,6 @@ const HomePage = () => {
               pauseDuration={1800}
               showCursor
               cursorCharacter="!"
-        
               cursorBlinkDuration={0.5}
             />
           </div>
@@ -330,121 +328,109 @@ const HomePage = () => {
 
       {/* Categories Section */}
 
-      <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-6">
-          <div>
-            <h2 className="text-xl md:text-3xl font-bold tracking-tight">
-              Browse by Category
-            </h2>
-            <p className="text-zinc-500 text-sm mt-1">
-              Select a category to filter services
-            </p>
-          </div>
+     <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+  {/* Header */}
+  <div className="flex items-end justify-between mb-6">
+    <div>
+      <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+        Browse by Category
+      </h2>
+      <p className="text-zinc-500 text-xs md:text-sm mt-1">
+        Select a category to filter services
+      </p>
+    </div>
+  </div>
 
-          {categories.length > 8 && (
-            <button
-              onClick={() => setShowAllCategories(!showAllCategories)}
-              className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
-            >
-              {showAllCategories ? "Show Less" : "See All"}
-            </button>
-          )}
-        </div>
+  {/* Categories Grid */}
+  <div
+    id="categories"
+    className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2.5 sm:gap-3 md:gap-4 transition-all duration-300"
+  >
+    {categories.map((cat, index) => {
+      // On mobile (< sm), hide items beyond the 8th item unless showAllCategories is true
+      const isHiddenOnMobile = !showAllCategories && index >= 8;
 
-        {/* Categories Grid */}
-        <div
-        id="categories"
+      return (
+        <Card
+          key={cat._id}
+          onClick={() => selectCategory(cat._id)}
+          hoverEffect={selectedCategory !== cat._id}
           className={`
-      grid gap-3 md:gap-5
-      grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8
-      transition-all duration-300
-    `}
+            group relative w-full overflow-hidden rounded-xl sm:rounded-2xl
+            flex-col items-center p-0 sm:p-2.5 md:p-3
+            transition-all duration-300 ease-out cursor-pointer
+            ${isHiddenOnMobile ? "hidden sm:flex" : "flex"}
+            ${
+              selectedCategory === cat._id
+                ? "border-indigo-500/80 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 scale-[1.02]"
+                : "border-white/5 bg-white/[0.03] hover:bg-white/[0.06]"
+            }
+          `}
         >
-          {visibleCategories.map((cat) => (
-            <Card
-              key={cat._id}
-              onClick={() => selectCategory(cat._id)}
-              hoverEffect={
-                selectedCategory !== cat._id
-              } /* Disables generic hover if already active */
-              className={`
-    group relative w-full overflow-hidden
-    flex flex-col items-center justify-between
-    text-center p-3 md:p-5
-    transition-all duration-300 ease-out
+          {/* Ambient Glow */}
+          <div
+            className={`
+              absolute inset-0 bg-gradient-to-br from-indigo-500/15 via-transparent to-transparent 
+              opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none
+              ${selectedCategory === cat._id ? "opacity-100" : ""}
+            `}
+          />
 
-    ${
-      selectedCategory === cat._id
-        ? "border-indigo-500/80 bg-indigo-500/10 shadow-lg shadow-indigo-500/10 scale-[1.02]"
-        : "border-white/5 bg-white/[0.02]"
-    }
-  `}
-            >
-              {/* Modern Ambient Glow — Only active when category matches */}
-              <div
-                className={`
-      absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent 
-      opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none
-      ${selectedCategory === cat._id ? "opacity-40" : ""}
-    `}
+          {/* Full-Bleed Image Container on Mobile */}
+          <div className="relative z-10 w-full aspect-square rounded-t-lg sm:rounded-xl overflow-hidden bg-zinc-900/60 sm:border sm:border-white/5 flex items-center justify-center">
+            {cat.image ? (
+              <img
+                src={cat.image}
+                alt={cat.name}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-
-              {/* Image or Fallback Icon Container */}
-              <div className="relative z-10 w-full flex justify-center mb-3">
-                {cat.image ? (
-                  <>
-                    <div className="w-28 h- md:w-full md:h-28 rounded-xl overflow-hidden bg-zinc-900/40 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                      <img
-                        src={cat.image}
-                        alt={cat.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-zinc-800/50 border border-white/5 flex items-center justify-center text-2xl md:text-3xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                    <span>🔧</span>
-                  </div>
-                )}
+            ) : (
+              <div className="flex items-center justify-center text-2xl sm:text-3xl md:text-4xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <span>🔧</span>
               </div>
-
-              {/* Category Name Typography */}
-              <span
-                className={`
-      relative z-10 w-full
-      text-[10px] md:text-sm font-medium 
-      tracking-wide leading-snug line-clamp-2
-      transition-colors duration-300
-
-      ${selectedCategory === cat._id ? "text-indigo-300 font-semibold" : "text-zinc-400 group-hover:text-zinc-200"}
-    `}
-              >
-                {cat.name}
-              </span>
-            </Card>
-          ))}
-        </div>
-
-        {/* Mobile Show More Button */}
-        {categories.length > 8 && (
-          <div className="flex justify-center mt-6 ">
-            <button
-              onClick={() => setShowAllCategories(!showAllCategories)}
-              className="
-          px-5 py-2 rounded-full
-          bg-white/5 border border-white/10
-          text-sm text-zinc-300
-          hover:bg-white/10
-          transition-all
-        "
-            >
-              {showAllCategories ? "Show Less" : "View More Categories"}
-            </button>
+            )}
           </div>
-        )}
-      </section>
+
+          {/* Title Container */}
+          <div className="relative z-10 w-full p-1.5 pb-2 sm:p-0 sm:mt-2 text-center">
+            <span
+              className={`
+                block text-[11px] sm:text-xs md:text-sm font-medium 
+                tracking-tight sm:tracking-wide leading-tight line-clamp-2
+                transition-colors duration-300
+                ${
+                  selectedCategory === cat._id
+                    ? "text-indigo-300 font-semibold"
+                    : "text-zinc-300 group-hover:text-white"
+                }
+              `}
+            >
+              {cat.name}
+            </span>
+          </div>
+        </Card>
+      );
+    })}
+  </div>
+
+  {/* Mobile Toggle Button (Hidden on Desktop) */}
+  {categories.length > 8 && (
+    <div className="flex justify-center mt-6 sm:hidden">
+      <button
+        onClick={() => setShowAllCategories(!showAllCategories)}
+        className="
+          w-full py-2.5 rounded-xl
+          bg-white/5 border border-white/10
+          text-xs font-medium text-zinc-300 active:bg-white/10
+          transition-all text-center
+        "
+      >
+        {showAllCategories ? "Show Less" : "View More Categories"}
+      </button>
+    </div>
+  )}
+</section>
 
       {/* Services Section */}
       <section

@@ -97,10 +97,10 @@ const Navbar = () => {
               </Link>
               {/* Logout button */}
               <Button
-                variant="secondary"
+                variant="danger"
                 size="sm"
                 onClick={handleLogout}
-                className="gap-2 text-zinc-400 hover:text-white"
+                className="gap-2 text-zinc-900"
               >
                 <LogOut size={14} />
                 Logout
@@ -205,7 +205,7 @@ const Navbar = () => {
                 </Link>
 
                 <Button
-                  variant="secondary"
+                  variant="danger"
                   onClick={handleLogout}
                   className="w-full justify-start gap-2 "
                 >

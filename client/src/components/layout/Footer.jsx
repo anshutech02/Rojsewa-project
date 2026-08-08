@@ -43,7 +43,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8 border-t border-neutral-800 font-sans">
+    <footer className="bg-neutral-900/50 text-neutral-300 pt-16 pb-8 border-t border-neutral-800 font-sans">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-neutral-800">
@@ -108,12 +108,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to={'/register'}
                   className="hover:text-white transition-colors duration-200"
                 >
                   Become Provider
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

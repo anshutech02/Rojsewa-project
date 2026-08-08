@@ -18,6 +18,7 @@ const Button = ({
     outline: 'bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white focus:ring-zinc-600',
     danger: 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/25 focus:ring-red-500 border border-transparent',
     ghost: 'bg-transparent hover:bg-zinc-800 text-zinc-400 hover:text-white border border-transparent',
+    danger: 'bg-red-400 hover:bg-red-500 text-black shadow-lg shadow-red-400/25 focus:ring-red-500 border border-transparent',
   };
 
   const sizes = {

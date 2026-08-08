@@ -17,15 +17,21 @@ const RegisterPage = () => {
 
   const [role, setRole] = useState('customer');
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Register submitted", Date.now());
+    console.log('Register submitted', Date.now());
+
     const signupData = {
       ...data,
       role,
-      // Format provider details if applicable
-      skills: data.skills ? data.skills.split(',').map(s => s.trim()) : [],
+      skills: data.skills
+        ? data.skills.split(',').map((s) => s.trim())
+        : [],
       experience: Number(data.experience) || 0,
     };
 
@@ -41,114 +47,187 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-lg flex flex-col gap-6">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight">Create Account</h2>
-            <p className="text-sm text-zinc-500 mt-2">Join ROJSEWA as a customer or service provider</p>
-          </div>
+    <div className="relative min-h-screen overflow-hidden bg-zinc-950 text-white">
 
-          {/* Role selector */}
-          <div className="grid grid-cols-2 gap-2 p-1 bg-zinc-900 rounded-xl">
-            <button
-              onClick={() => setRole('customer')}
-              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${role === 'customer'
-                  ? 'bg-zinc-800 text-white shadow'
-                  : 'text-zinc-400 hover:text-zinc-200'
+      {/* ================= Background Video ================= */}
+      <video
+        className="fixed inset-0 z-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        
+      >
+        <source src="/video4.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* ================= Dark Overlay ================= */}
+      <div className="fixed inset-0 z-0 bg-black/70" />
+
+      {/* ================= Gradient Overlay ================= */}
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-indigo-950/60 via-black/40 to-zinc-950/80" />
+
+      {/* ================= Page Content ================= */}
+      <div className="relative z-10 min-h-screen">
+
+        <Navbar />
+
+        <main className="flex min-h-[calc(100vh-80px)] items-center justify-center px-4 py-12">
+          <div className="w-full max-w-md">
+
+            {/* Heading */}
+            <div className="mb-6 text-center">
+              <h1 className="text-3xl font-bold tracking-tight text-white">
+                Create Account
+              </h1>
+
+              <p className="mt-2 text-sm text-zinc-300">
+                Join ROJSEWA as a customer or service provider
+              </p>
+            </div>
+
+            {/* Role Selector */}
+            <div className="mb-5 grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-black/40 p-1 backdrop-blur-md">
+              <button
+                type="button"
+                onClick={() => setRole('customer')}
+                className={`cursor-pointer rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300 ${
+                  role === 'customer'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
-            >
-              Customer
-            </button>
-            <button
-              onClick={() => setRole('provider')}
-              className={`py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 cursor-pointer ${role === 'provider'
-                  ? 'bg-indigo-600 text-white shadow shadow-indigo-600/10'
-                  : 'text-zinc-400 hover:text-zinc-200'
+              >
+                Customer
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRole('provider')}
+                className={`cursor-pointer rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300 ${
+                  role === 'provider'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
+              >
+                Service Provider
+              </button>
+            </div>
+
+            {/* Registration Card */}
+            <Card
+              hoverEffect={false}
+              className="border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl"
             >
-              Service Provider
-            </button>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-5"
+              >
+                <Input
+                  label="Full Name"
+                  placeholder="John Doe"
+                  error={errors.name}
+                  {...register('name', {
+                    required: 'Name is required',
+                  })}
+                />
+
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="john@example.com"
+                  error={errors.email}
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: 'Invalid email address',
+                    },
+                  })}
+                />
+
+                <Input
+                  label="WhatsApp Number"
+                  type="tel"
+                  placeholder="+91 98765 43210"
+                  error={errors.phone}
+                  {...register('phone', {
+                    required: 'WhatsApp number is required',
+                  })}
+                />
+
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="Min 6 characters"
+                  error={errors.password}
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must be at least 6 characters',
+                    },
+                  })}
+                />
+
+                {/* Provider Details */}
+                {role === 'provider' && (
+                  <div className="mt-2 flex flex-col gap-4 border-t border-zinc-800/80 pt-4">
+                    <h3 className="text-sm font-bold text-indigo-400">
+                      Professional Details
+                    </h3>
+
+                    <Input
+                      label="Skills (Comma-separated)"
+                      placeholder="Electrician, Wiring, Inverter repair"
+                      error={errors.skills}
+                      {...register('skills', {
+                        required: 'Skills are required for providers',
+                      })}
+                    />
+
+                    <Input
+                      label="Years Experience"
+                      type="number"
+                      placeholder="e.g. 5"
+                      error={errors.experience}
+                      {...register('experience', {
+                        required: 'Experience is required',
+                      })}
+                    />
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  loading={loading}
+                  className="mt-2 w-full"
+                >
+                  Register
+                </Button>
+              </form>
+            </Card>
+
+            {/* Login Link */}
+            <p className="mt-6 text-center text-sm text-zinc-300">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
+
           </div>
+        </main>
 
-          <Card hoverEffect={false} className="p-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-              <Input
-                label="Full Name"
-                placeholder="John Doe"
-                error={errors.name}
-                {...register('name', { required: 'Name is required' })}
-              />
-
-              <Input
-                label="Email Address"
-                type="email"
-                placeholder="john@example.com"
-                error={errors.email}
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' }
-                })}
-              />
-
-              <Input
-                label="WhatsApp Number"
-                type="tel"
-                placeholder="+91 98765 43210"
-                error={errors.phone}
-                {...register('phone', { required: 'WhatsApp number is required' })}
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                placeholder="Min 6 characters"
-                error={errors.password}
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Password must be at least 6 characters' }
-                })}
-              />
-
-              {role === 'provider' && (
-                <div className="flex flex-col gap-4 border-t border-zinc-800/80 pt-4 mt-2">
-                  <h3 className="text-sm font-bold text-indigo-400">Professional details</h3>
-
-                  <Input
-                    label="Skills (Comma-separated)"
-                    placeholder="Electrician, Wiring, Inverter repair"
-                    error={errors.skills}
-                    {...register('skills', { required: 'Skills are required for providers' })}
-                  />
-
-                  <Input
-                    label="Years Experience"
-                    type="number"
-                    placeholder="e.g. 5"
-                    error={errors.experience}
-                    {...register('experience', { required: 'Experience is required' })}
-                  />
-                </div>
-              )}
-
-              <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
-                Register
-              </Button>
-            </form>
-          </Card>
-
-          <p className="text-center text-sm text-zinc-400">
-            Already have an account?{' '}
-            <Link to="/login" className="text-indigo-400 font-medium hover:underline">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </main>
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 };
 
 export default RegisterPage;
+
