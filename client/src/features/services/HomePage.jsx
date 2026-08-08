@@ -475,7 +475,7 @@ const HomePage = () => {
                 )}
 
                 {/* Optional Dark Overlay */}
-                <div className="absolute inset-0 backdrop-blur-[0.2px]" />
+                {/* <div className="absolute inset-0 backdrop-blur-[0.2px]" /> */}
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col justify-between h-full p-6">
