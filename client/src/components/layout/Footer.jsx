@@ -27,12 +27,12 @@ export default function Footer() {
     },
     {
       Icon: FiInstagram,
-      link: "https://www.instagram.com/ajitlalrana/",
+      link: "https://www.instagram.com/ayansh196?stkn=MTF6NHI3N3VhZDlsNA==",
       hover: "group-hover:text-pink-500",
     },
     {
       Icon: FiLinkedin,
-      link: "https://www.linkedin.com/in/ajit-lal-rana/",
+      link: "www.linkedin.com/in/anshu-verma-a278b635b",
       hover: "group-hover:text-blue-500",
     },
     {
