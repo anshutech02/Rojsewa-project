@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://rojsewa-project-1.onrender.com/api',
   withCredentials: true,
   timeout: 60000, // 60s timeout to handle Render cold starts (~30-50s)
 });
@@ -74,13 +74,13 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          'http://localhost:5000/api/auth/refresh',
+          'https://rojsewa-project-1.onrender.com/auth/refresh',
           {},
           { withCredentials: true, timeout: 60000 }
         );
         const newToken = data.accessToken;
         localStorage.setItem('accessToken', newToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;        await api.get("/api/health");
         processQueue(null, newToken);
         return api(originalRequest);
       } catch (refreshError) {
