@@ -21,7 +21,7 @@ app.set('trust proxy', 1);
 // Security
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://rojsewa-six.vercel.app'],
+  origin: ['http://localhost:5173', 'https://rojsewa-project-client.vercel.app/'],
   credentials: true,
 }));
 
